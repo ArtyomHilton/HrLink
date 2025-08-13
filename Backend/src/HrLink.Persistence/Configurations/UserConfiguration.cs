@@ -19,6 +19,20 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsUnique();
         builder.Property(x => x.Id)
             .IsRequired();
+        
+        builder.Property(x => x.FirstName)
+            .IsRequired()
+            .HasMaxLength(50);
+        
+        builder.Property(x=> x.SecondName)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        builder.Property(x => x.Patronymic)
+            .HasMaxLength(50);
+
+        builder.Property(x => x.DateOfBirthday)
+            .IsRequired();
 
         builder.Property(x => x.Email)
             .HasMaxLength(100)
@@ -36,7 +50,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasOne(x => x.Employee)
             .WithOne(x => x.User)
             .HasForeignKey<User>(x => x.EmployeeId);
-        
-        
     }
 }

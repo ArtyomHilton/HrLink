@@ -19,16 +19,13 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(x => x.Id)
             .IsRequired();
 
-        builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(50);
+        builder.HasIndex(x => x.WorkEmail)
+            .IsUnique();
+        builder.Property(x => x.WorkEmail)
+            .IsRequired();
         
-        builder.Property(x=> x.SecondName)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Property(x => x.Patronymic)
-            .HasMaxLength(50);
+        builder.HasIndex(x => x.WorkPhoneNumber)
+            .IsUnique();
 
         builder.Property(x => x.DateOfEmployment)
             .IsRequired();
