@@ -34,6 +34,7 @@ public class UserRepository : IUserRepository
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
             .Where(x => !x.IsDelete)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
     /// <inheritdoc />
@@ -42,6 +43,7 @@ public class UserRepository : IUserRepository
             .Include(x => x.Employee)
             .Include(x => x.UserRoles)
             .ThenInclude(x => x.Role)
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => !x.IsDelete && x.Id == id, cancellationToken);
 
     /// <inheritdoc />
@@ -56,7 +58,7 @@ public class UserRepository : IUserRepository
                 .SetProperty(u => u.Patronymic, user.Patronymic), cancellationToken);
 
     /// <inheritdoc />
-    public async Task<int?> DeleteOrRestoreUserByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    public async Task<int?> ChangeDeleteUserStatusByIdAsync(Guid id, CancellationToken cancellationToken) =>
         await _context.Users.Where(x => x.Id == id && !x.IsDelete)
             .ExecuteUpdateAsync(x => 
                 x.SetProperty(u => u.IsDelete, u => !u.IsDelete), cancellationToken);

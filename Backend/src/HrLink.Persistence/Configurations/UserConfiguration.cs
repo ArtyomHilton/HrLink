@@ -42,10 +42,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.PasswordHash)
             .IsRequired();
+
+        builder.Ignore(x => x.FullName);
         
         builder.Property(x => x.IsDelete)
             .IsRequired()
             .HasDefaultValue(false);
+
+        builder.Property(x => x.IsDelete)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        builder.Property(x => x.EmployeeId)
+            .IsRequired(false);
+        builder.HasIndex(x => x.EmployeeId)
+            .IsUnique();
 
         builder.HasOne(x => x.Employee)
             .WithOne(x => x.User)

@@ -41,5 +41,5 @@ public interface IUserRepository
     /// <param name="id">Идентификатор <see cref="User"/>.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
     /// <returns>Количество удаленных записей.</returns>
-    Task<int?> DeleteOrRestoreUserByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<int?> ChangeDeleteUserStatusByIdAsync(Guid id, CancellationToken cancellationToken);
 }

@@ -28,16 +28,20 @@ public class RoleRepository : IRoleRepository
 
     /// <inheritdoc />
     public async Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken) =>
-        await _context.Roles.ToListAsync(cancellationToken);
+        await _context.Roles
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
     /// <inheritdoc />
     public async Task<Role?> GetRoleByIdAsync(Guid id, CancellationToken cancellationToken) =>
-        await _context.Roles.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        await _context.Roles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     /// <inheritdoc />
     public async Task<int?> UpdateRoleByIdAsync(Role role, CancellationToken cancellationToken) =>
         await _context.Roles
-            .Where(x=> x.Id == role.Id)
+            .Where(x => x.Id == role.Id)
             .ExecuteUpdateAsync(x =>
                 x.SetProperty(r => r.Name, role.Name), cancellationToken);
 

@@ -26,7 +26,9 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         
         builder.HasIndex(x => x.WorkPhoneNumber)
             .IsUnique();
-
+        builder.Property(x => x.WorkPhoneNumber)
+            .IsRequired(false);
+        
         builder.Property(x => x.DateOfEmployment)
             .IsRequired();
     }

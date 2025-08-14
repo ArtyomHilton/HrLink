@@ -16,4 +16,9 @@ public class User
     public Guid? EmployeeId { get; set; }
     public Employee? Employee { get; set; }
     public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    
+    public string FullName =>
+        string.IsNullOrWhiteSpace(Patronymic)
+            ? $"{SecondName} {FirstName}"
+            : $"{SecondName} {FirstName} {Patronymic}";
 }
