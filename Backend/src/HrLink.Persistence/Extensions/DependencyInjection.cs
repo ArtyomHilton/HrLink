@@ -1,6 +1,8 @@
 using HrLink.Domain.Interfaces;
+using HrLink.Domain.Interfaces.RoleRepositories;
 using HrLink.Persistence.Context;
 using HrLink.Persistence.Repositories;
+using HrLink.Persistence.Repositories.RoleRepositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,7 +34,11 @@ public static class DependencyInjection
     /// <returns>Модифицированный <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddRepository(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddScoped<IRoleRepository, RoleRepository>();
+        serviceCollection.AddScoped<ICreateRoleRepository, CreateRoleRepository>();
+        serviceCollection.AddScoped<IDeleteRoleRepository, DeleteRoleRepository>();
+        serviceCollection.AddScoped<IGetAllRolesRepository, GetAllRolesRepository>();
+        serviceCollection.AddScoped<IGetRoleByIdRepository, GetRoleByIdRepository>();
+        serviceCollection.AddScoped<IUpdateRoleByIdRepository, UpdateRoleByIdRepository>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
 
         return serviceCollection;
