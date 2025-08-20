@@ -14,6 +14,12 @@ public class AddUserRepository : IAddUserRepository
         _context = context;
     }
 
+    public async Task<List<Guid>> GetExistRolesByIdsAsync(List<Guid> roleIds, CancellationToken cancellationToken) =>
+        await _context.Roles
+            .Where(x => roleIds.Contains(x.Id))
+            .Select(x=> x.Id)
+            .ToListAsync(cancellationToken);
+
     public async Task<bool> EmailExistAsync(string email, CancellationToken cancellationToken) =>
         await _context.Users.AnyAsync(x => x.Email == email, cancellationToken);
 
@@ -22,6 +28,7 @@ public class AddUserRepository : IAddUserRepository
         var entry = await _context.Users.AddAsync(user, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
+        
         return entry.Entity;
     }
 }

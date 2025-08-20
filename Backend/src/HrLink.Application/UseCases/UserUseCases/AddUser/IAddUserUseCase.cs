@@ -5,5 +5,5 @@ namespace HrLink.Application.UseCases.UserUseCases.AddUser;
 
 public interface IAddUserUseCase
 {
-    Task<Result<User?>> Execute(User user, CancellationToken cancellationToken);
+    Task<Result<User?>> Execute(AddUserCommand command, CancellationToken cancellationToken);
 }

@@ -14,17 +14,19 @@ public class AddUserUseCase : IAddUserUseCase
         _repository = repository;
     }
     
-    public async Task<Result<User?>> Execute(User user, CancellationToken cancellationToken)
+    public async Task<Result<User?>> Execute(AddUserCommand command, CancellationToken cancellationToken)
     {
-        if (await _repository.EmailExistAsync(user.Email, cancellationToken))
+        if (await _repository.EmailExistAsync(command.Email, cancellationToken))
         {
-            return Result.Failure<User?>(user, new UserEmailExistError("Данные Email уже занят", nameof(user.Email)));
+            return Result.Failure<User?>(null, new UserEmailExistError("Данные Email уже занят", nameof(command.Email)));
         }
 
-        var entity = await _repository.AddUserAsync(user, cancellationToken);
+        command.RoleIds = await _repository.GetExistRolesByIdsAsync(command.RoleIds, cancellationToken);
+
+        var entity = await _repository.AddUserAsync(command.ToModel(), cancellationToken);
 
         return entity is null 
-            ? Result.Failure<User?>(entity ,new UserEmailExistError("Данные Email уже занят", nameof(user.Email))) 
+            ? Result.Failure<User?>(entity ,new UserEmailExistError("Данные Email уже занят", nameof(command.Email))) 
             : Result.Success<User?>(entity);
     }
 }

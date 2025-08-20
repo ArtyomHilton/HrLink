@@ -1,9 +1,8 @@
-using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Domain.Entities;
 
-namespace HrLink.API.DTOs.Users;
+namespace HrLink.Application.UseCases.UserUseCases.AddUser;
 
-public class AddUserRequestDto
+public class AddUserCommand
 {
     public required string FirstName { get; set; }
     public required string SecondName { get; set; }
@@ -12,20 +11,26 @@ public class AddUserRequestDto
     public required string Email { get; set; }
     public required string Password { get; set; }
     public required List<Guid> RoleIds { get; set; }
-
-    public AddUserCommand ToCommand()
+    
+    public User ToModel()
     {
         var userId = Guid.NewGuid();
 
-        return new AddUserCommand()
+        return new User()
         {
+            Id = userId,
             FirstName = this.FirstName,
             SecondName = this.SecondName,
             Patronymic = this.Patronymic,
             DateOfBirthday = this.DateOfBirthday,
             Email = this.Email,
-            Password = this.Password, // TODO: Хэширование
-            RoleIds = this.RoleIds
+            PasswordHash = this.Password, // TODO: Хэширование
+            IsDelete = false,
+            UserRoles = RoleIds.Select(x => new UserRole()
+            {
+                RoleId = x,
+                UserId = userId
+            }).ToList()
         };
     }
 }
