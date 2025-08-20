@@ -1,21 +1,33 @@
+using HrLink.Application.Extensions;
 using HrLink.Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddOpenApi();
-
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddRepository();
+builder.Services.AddUseCases();
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();
