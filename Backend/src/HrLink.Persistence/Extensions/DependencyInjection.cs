@@ -1,10 +1,6 @@
-using HrLink.Domain.Interfaces;
-using HrLink.Domain.Interfaces.RoleRepositories;
-using HrLink.Domain.Interfaces.UserRepositories;
+using HrLink.Application.Interfaces;
 using HrLink.Persistence.Context;
-using HrLink.Persistence.Repositories;
-using HrLink.Persistence.Repositories.RoleRepositories;
-using HrLink.Persistence.Repositories.UserRepositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,27 +20,10 @@ public static class DependencyInjection
     public static IServiceCollection AddPersistence(this IServiceCollection serviceCollection,
         IConfiguration configuration)
     {
-        return serviceCollection
-            .AddNpgsql<ApplicationDbContext>(configuration.GetSection("ConnectionStrings")["DatabaseConnectionString"],
-                builder => { builder.EnableRetryOnFailure(10); });
-    }
-
-    /// <summary>
-    /// Регистрирует репозитории в DI. 
-    /// </summary>
-    /// <param name="serviceCollection"><see cref="IServiceCollection"/></param>
-    /// <returns>Модифицированный <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection AddRepository(this IServiceCollection serviceCollection)
-    {
-        serviceCollection.AddScoped<ICreateRoleRepository, CreateRoleRepository>();
-        serviceCollection.AddScoped<IDeleteRoleRepository, DeleteRoleRepository>();
-        serviceCollection.AddScoped<IGetAllRolesRepository, GetAllRolesRepository>();
-        serviceCollection.AddScoped<IGetRoleByIdRepository, GetRoleByIdRepository>();
-        serviceCollection.AddScoped<IUpdateRoleByIdRepository, UpdateRoleByIdRepository>();
-
-        serviceCollection.AddScoped<IAddUserRepository, AddUserRepository>();
-        serviceCollection.AddScoped<IAddRolesForUserRepository, AddRolesForUserRepository>();
-
-        return serviceCollection;
+        return serviceCollection.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
+            {
+                options.UseNpgsql(configuration.GetSection("ConnectionStrings")["DatabaseConnectionString"],
+                    builder => { builder.EnableRetryOnFailure(10); });
+            });
     }
 }

@@ -1,32 +1,37 @@
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
+using HrLink.Application.Interfaces;
 using HrLink.Domain.Entities;
-using HrLink.Domain.Interfaces.UserRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddUser;
 
 public class AddUserUseCase : IAddUserUseCase
 {
-    private readonly IAddUserRepository _repository;
+    private readonly IApplicationDbContext _context;
 
-    public AddUserUseCase(IAddUserRepository repository)
+    public AddUserUseCase(IApplicationDbContext context)
     {
-        _repository = repository;
+        _context = context;
     }
     
     public async Task<Result<User?>> Execute(AddUserCommand command, CancellationToken cancellationToken)
     {
-        if (await _repository.EmailExistAsync(command.Email, cancellationToken))
+        if (await _context.Users.AnyAsync(x=> x.Email == command.Email, cancellationToken))
         {
             return Result.Failure<User?>(null, new UserEmailExistError("Данные Email уже занят", nameof(command.Email)));
         }
 
-        command.RoleIds = await _repository.GetExistRolesByIdsAsync(command.RoleIds, cancellationToken);
+        command.RoleIds = await _context.Roles
+            .Where(x=> command.RoleIds.Contains(x.Id))
+            .Select(x=> x.Id)
+            .ToListAsync(cancellationToken);
 
-        var entity = await _repository.AddUserAsync(command.ToModel(), cancellationToken);
+        var entry = await _context.Users
+            .AddAsync(command.ToModel(), cancellationToken);
 
-        return entity is null 
-            ? Result.Failure<User?>(entity ,new UserEmailExistError("Данные Email уже занят", nameof(command.Email))) 
-            : Result.Success<User?>(entity);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success<User?>(entry.Entity);
     }
 }

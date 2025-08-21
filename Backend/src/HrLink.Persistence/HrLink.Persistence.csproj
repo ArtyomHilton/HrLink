@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HrLink.Application\HrLink.Application.csproj" />
     <ProjectReference Include="..\HrLink.Domain\HrLink.Domain.csproj" />
   </ItemGroup>
 

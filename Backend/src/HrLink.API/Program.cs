@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddRepository();
 builder.Services.AddUseCases();
 
 builder.Services.AddControllers();

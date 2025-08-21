@@ -1,3 +1,4 @@
+using HrLink.Application.Interfaces;
 using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace HrLink.Persistence.Context;
 /// <summary>
 /// <see cref="DbContext"/>.
 /// </summary>
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -18,9 +19,9 @@ public class ApplicationDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Employee> Employees => Set<Employee>();
-    public DbSet<Candidate> Candidates => Set<Candidate>();
-    public DbSet<Role> Roles => Set<Role>();
-    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<User> Users { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Candidate> Candidates { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
 }
