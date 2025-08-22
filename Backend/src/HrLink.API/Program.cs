@@ -1,4 +1,5 @@
 using HrLink.Application.Extensions;
+using HrLink.Caching.Extensions;
 using HrLink.Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddUseCases();
 
 builder.Services.AddControllers();

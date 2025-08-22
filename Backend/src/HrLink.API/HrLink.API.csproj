@@ -22,6 +22,7 @@
     <ProjectReference Include="..\HrLink.Application\HrLink.Application.csproj" />
     <ProjectReference Include="..\HrLink.Email\HrLink.Email.csproj" />
     <ProjectReference Include="..\HrLink.Persistence\HrLink.Persistence.csproj" />
+    <ProjectReference Include="..\HrLink.Caching\HrLink.Caching.csproj" />
   </ItemGroup>
 
   <ItemGroup>
