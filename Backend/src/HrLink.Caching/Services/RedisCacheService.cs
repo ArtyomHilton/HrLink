@@ -28,7 +28,7 @@ public class RedisCacheService : ICacheService
         var cache = await _distributedCache.GetStringAsync(key, cancellationToken);
 
         return string.IsNullOrEmpty(cache)
-            ? default
+            ? default(T)
             : JsonSerializer.Deserialize<T>(cache, _jsonSerializerOptions);
     }
 
@@ -36,7 +36,7 @@ public class RedisCacheService : ICacheService
     {
         var stringValue = JsonSerializer.Serialize(value, _jsonSerializerOptions);
 
-        await _distributedCache.SetStringAsync(stringValue, key, _distributedCacheEntryOptions, cancellationToken);
+        await _distributedCache.SetStringAsync(key, stringValue, _distributedCacheEntryOptions, cancellationToken);
     }
 
     public async Task RemoveAsync(string key, CancellationToken cancelationToken) =>

@@ -13,5 +13,5 @@ public class Employee
     public required DateTime DateOfEmployment { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public User? User { get; set; }
-    public ICollection<Interview> Interviews { get; } = new List<Interview>();
+    public ICollection<Interview>? Interviews { get; } = new List<Interview>();
 }

@@ -1,7 +1,10 @@
 using HrLink.API.DTOs.Users;
+using HrLink.API.Mappings;
+using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
+using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrLink.API.Controllers;
@@ -26,7 +29,7 @@ public class UsersControllers : ControllerBase
             {
                 UserEmailExistError => BadRequest(new
                 {
-                    Message = result.Error.Messsage,
+                    Message = result.Error.Message,
                     Target = result.Error.Target
                 }),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
@@ -52,12 +55,12 @@ public class UsersControllers : ControllerBase
             {
                 NoRolesError => BadRequest(new
                 {
-                    Message = result.Error.Messsage,
+                    Message = result.Error.Message,
                     Target = result.Error.Target
                 }),
                 Error => BadRequest(new
                 {
-                    Message = result.Error.Messsage,
+                    Message = result.Error.Message,
                     Target = result.Error.Target
                 }),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
@@ -65,5 +68,28 @@ public class UsersControllers : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserById(Guid userId, 
+        [FromServices] IGetUserByIdUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var result = await useCase.Execute(userId, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return result.Error switch
+            {
+                NotFoundError => NotFound(new
+                {
+                    Message = result.Error.Message,
+                    Target = result.Error.Target
+                }),
+                _ => StatusCode(StatusCodes.Status500InternalServerError)
+            };
+        }
+
+        return Ok(result.Value!.ToResponse());
     }
 }

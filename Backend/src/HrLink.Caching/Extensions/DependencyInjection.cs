@@ -12,15 +12,16 @@ public static class DependencyInjection
     {
         serviceCollection.AddStackExchangeRedisCache(options =>
         {
-            options.InstanceName = "HrLink";
-            var configOptions = ConfigurationOptions.Parse(configuration.GetSection("ConnectionStrings")["Redis"]!);
-            configOptions.ConnectRetry = 5;
-            configOptions.AllowAdmin = false;
-            configOptions.ClientName = "HrLink_App";
+            options.Configuration = configuration.GetSection("ConnectionStrings")["RedisConnectionString"];
+            options.InstanceName = "HrLink_";
+            var configurationOptions = ConfigurationOptions.Parse(options.Configuration!);
+            configurationOptions.ClientName = "HrLink_App";
+            configurationOptions.AllowAdmin = false;
+            configurationOptions.ConnectRetry = 5;
         });
 
-        serviceCollection.AddScoped<ICacheService,RedisCacheService>();
-        
+        serviceCollection.AddScoped<ICacheService, RedisCacheService>();
+
         return serviceCollection;
     }
 }

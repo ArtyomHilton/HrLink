@@ -11,7 +11,7 @@ public class Candidate
     public string? Patronymic { get; set; }
     public required string Email { get; set; }
     public string? PhoneNumber { get; set; } = string.Empty;
-    public ICollection<Interview> Interviews { get; } = new List<Interview>();
+    public ICollection<Interview>? Interviews { get; } = new List<Interview>();
     public string FullName =>
         string.IsNullOrWhiteSpace(Patronymic)
             ? $"{SecondName} {FirstName}"

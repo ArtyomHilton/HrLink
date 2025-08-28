@@ -1,5 +1,6 @@
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
+using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HrLink.Application.Extensions;
@@ -10,6 +11,7 @@ public static class DependencyInjection
     {
         serviceCollection.AddScoped<IAddUserUseCase, AddUserUseCase>();
         serviceCollection.AddScoped<IAddRolesForUserUseCase, AddRolesForUserUseCase>();
+        serviceCollection.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
         
         return serviceCollection;
     }

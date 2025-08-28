@@ -31,9 +31,9 @@ public class Result
 
 public class Result<T> : Result
 {
-    public T Value { get; init; }
+    public T? Value { get; init; }
 
-    protected internal Result(T value, IError? error, bool result) : base(error, result)
+    protected internal Result(T? value, IError? error, bool result) : base(error, result)
     {
         Value = value;
     }

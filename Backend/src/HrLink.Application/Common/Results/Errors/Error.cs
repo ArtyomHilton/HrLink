@@ -2,12 +2,12 @@ namespace HrLink.Application.Common.Results.Errors;
 
 public class Error : IError
 {
-    public string Messsage { get; init; }
+    public string Message { get; init; }
     public string Target { get; init; }
 
     public Error(string target)
     {
-        Messsage = "Произошла непредвиденная ошибка";
+        Message = "Произошла непредвиденная ошибка";
         Target = target;
     }
 }

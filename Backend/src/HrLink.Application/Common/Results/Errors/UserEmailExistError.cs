@@ -2,12 +2,12 @@ namespace HrLink.Application.Common.Results.Errors;
 
 public class UserEmailExistError : IError
 {
-    public string Messsage { get; init; }
+    public string Message { get; init; }
     public string Target { get; init; }
 
     public UserEmailExistError(string message, string target)
     {
-        Messsage = message;
+        Message = message;
         Target = target;
     }
 }

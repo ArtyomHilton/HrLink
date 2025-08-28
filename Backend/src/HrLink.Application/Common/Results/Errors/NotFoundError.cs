@@ -1,13 +1,13 @@
 namespace HrLink.Application.Common.Results.Errors;
 
-public class NoRolesError : IError
+public class NotFoundError : IError
 {
     public string Message { get; init; }
     public string Target { get; init; }
 
-    public NoRolesError(string messsage, string target)
+    public NotFoundError(string message, string target)
     {
-        Message = messsage;
+        Message = message;
         Target = target;
     }
 }
