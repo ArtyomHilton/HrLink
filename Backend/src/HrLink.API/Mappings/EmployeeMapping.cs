@@ -5,7 +5,7 @@ namespace HrLink.API.Mappings;
 
 public static class EmployeeMapping
 {
-    public static EmployeeResponseDto ToResponse(this Employee employee)
+    public static EmployeeResponseDto ToDetailedResponse(this Employee employee)
     {
         return new EmployeeResponseDto()
         {
@@ -15,6 +15,15 @@ public static class EmployeeMapping
             WorkPhoneNumber = employee.WorkPhoneNumber,
             DateOfEmployment = employee.DateOfEmployment,
             Interview = employee.Interviews?.ToResponse()
+        };
+    }
+
+    public static GetUsersEmployeeResponseDto ToShortResponse(this Employee employee)
+    {
+        return new GetUsersEmployeeResponseDto
+        {
+            Id = employee.Id,
+            Position = employee.Position
         };
     }
 }

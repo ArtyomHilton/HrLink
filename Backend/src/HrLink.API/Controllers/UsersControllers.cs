@@ -1,10 +1,11 @@
 using HrLink.API.DTOs.Users;
 using HrLink.API.Mappings;
-using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
+using HrLink.Application.UseCases.UserUseCases.GetUsers;
+using HrLink.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrLink.API.Controllers;
@@ -71,6 +72,7 @@ public class UsersControllers : ControllerBase
     }
 
     [HttpGet("{userId:guid}")]
+    [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserById(Guid userId, 
         [FromServices] IGetUserByIdUseCase useCase,
         CancellationToken cancellationToken)
@@ -90,6 +92,17 @@ public class UsersControllers : ControllerBase
             };
         }
 
-        return Ok(result.Value!.ToResponse());
+        return Ok(result.Value!.ToDetailedResponse());
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(GetUsersResponseDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto, 
+        IGetUsersUseCase useCase,
+        CancellationToken cancellationToken)
+    {
+        var result = await useCase.Execute(requestDto.ToQuery(), cancellationToken);
+
+        return Ok(result.Value?.ToShortResponse());
     }
 }

@@ -14,12 +14,8 @@ public static class DependencyInjection
         {
             options.Configuration = configuration.GetSection("ConnectionStrings")["RedisConnectionString"];
             options.InstanceName = "HrLink_";
-            var configurationOptions = ConfigurationOptions.Parse(options.Configuration!);
-            configurationOptions.ClientName = "HrLink_App";
-            configurationOptions.AllowAdmin = false;
-            configurationOptions.ConnectRetry = 5;
         });
-
+        
         serviceCollection.AddScoped<ICacheService, RedisCacheService>();
 
         return serviceCollection;

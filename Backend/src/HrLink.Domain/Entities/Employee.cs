@@ -6,7 +6,6 @@ namespace HrLink.Domain.Entities;
 public class Employee
 {
     public required Guid Id { get; set; }
-    
     public required string Position { get; set; }
     public required string WorkEmail { get; set; }
     public string? WorkPhoneNumber { get; set; }

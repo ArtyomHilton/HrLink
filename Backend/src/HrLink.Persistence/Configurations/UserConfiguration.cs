@@ -42,8 +42,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(x => x.PasswordHash)
             .IsRequired();
-
-        builder.Ignore(x => x.FullName);
         
         builder.Property(x => x.IsDelete)
             .IsRequired()
