@@ -73,11 +73,11 @@ public class UsersControllers : ControllerBase
 
     [HttpGet("{userId:guid}")]
     [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUserById(Guid userId, 
+    public async Task<IActionResult> GetUserById(Guid userId,
         [FromServices] IGetUserByIdUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var result = await useCase.Execute(userId, cancellationToken);
+        var result = await useCase.Execute(new GetUserByIdQuery() { Id = userId }, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -97,7 +97,7 @@ public class UsersControllers : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(GetUsersResponseDto), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto, 
+    public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto,
         IGetUsersUseCase useCase,
         CancellationToken cancellationToken)
     {

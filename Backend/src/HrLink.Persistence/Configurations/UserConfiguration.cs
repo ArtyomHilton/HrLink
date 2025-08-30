@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace HrLink.Persistence.Configurations;
 
 /// <summary>
-/// Конфигурация сущности <see cref="User"/>.
+/// Конфигурация <see cref="User"/>.
 /// </summary>
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

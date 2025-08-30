@@ -6,8 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace HrLink.Application.Extensions;
 
+/// <summary>
+/// Классы расширения для внедрения зависимостей слоя <see cref="Application"/>.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Добавление UseCases.
+    /// </summary>
+    /// <param name="serviceCollection"><see cref="IServiceCollection"/>.</param>
+    /// <returns>Измененный <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddUseCases(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IAddUserUseCase, AddUserUseCase>();

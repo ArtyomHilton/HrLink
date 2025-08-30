@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.Interfaces;
 
+/// <summary>
+/// Контекст базы данных.
+/// </summary>
 public interface IApplicationDbContext
 {
     DbSet<User> Users { get; set; }

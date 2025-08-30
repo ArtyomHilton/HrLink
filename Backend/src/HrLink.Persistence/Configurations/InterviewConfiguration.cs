@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HrLink.Persistence.Configurations;
 
+/// <summary>
+/// Конфигурация <see cref="Interview"/>.
+/// </summary>
 public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
 {
     public void Configure(EntityTypeBuilder<Interview> builder)

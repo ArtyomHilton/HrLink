@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HrLink.Persistence.Configurations;
 
+/// <summary>
+/// Конфигурация <see cref="Candidate"/>.
+/// </summary>
 public class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
 {
     public void Configure(EntityTypeBuilder<Candidate> builder)
@@ -33,7 +36,5 @@ public class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
         
         builder.Property(x => x.Email)
             .IsRequired();
-
-        builder.Ignore(x => x.FullName);
     }
 }

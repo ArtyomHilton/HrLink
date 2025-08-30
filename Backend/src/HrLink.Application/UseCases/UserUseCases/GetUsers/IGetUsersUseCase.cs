@@ -3,7 +3,17 @@ using HrLink.Domain.Entities;
 
 namespace HrLink.Application.UseCases.UserUseCases.GetUsers;
 
+/// <summary>
+/// Обработчик запроса получения пользователей.
+/// </summary>
 public interface IGetUsersUseCase
 {
+    /// <summary>
+    /// Выполняет запрос получения пользователей.
+    /// Полчает пользователей.
+    /// </summary>
+    /// <param name="query"><see cref="GetUsersQuery"/> Запрос получения пользователей.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Результат выполнения запроса.</returns>
     Task<Result<List<User>?>> Execute(GetUsersQuery query, CancellationToken cancellationToken);
 }

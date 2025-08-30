@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace HrLink.Persistence.Configurations;
 
 /// <summary>
-/// Конфигурация для сущности <see cref="UserRole"/>.
+/// Конфигурация для <see cref="UserRole"/>.
 /// </summary>
 public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 {

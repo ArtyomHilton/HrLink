@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 
+/// <inheritdoc cref="IAddRolesForUserUseCase"/>
 public class AddRolesForUserUseCase : IAddRolesForUserUseCase
 {
+    /// <inheritdoc cref="IApplicationDbContext"/>
     private readonly IApplicationDbContext _context;
 
     public AddRolesForUserUseCase(IApplicationDbContext context)
@@ -14,6 +16,7 @@ public class AddRolesForUserUseCase : IAddRolesForUserUseCase
         _context = context;
     }
 
+    /// <inheritdoc />
     public async Task<Result> Execute(AddRolesForUserCommand command, CancellationToken cancellationToken)
     {
         command.RoleIds = await _context.Roles
@@ -37,7 +40,7 @@ public class AddRolesForUserUseCase : IAddRolesForUserUseCase
             return Result.Failure(new NoRolesError("Указанные вами роли уже присутствуют у этого пользователя",
                 nameof(command.RoleIds)));
 
-        await _context.UserRoles.AddRangeAsync(command.ToModel(), cancellationToken);
+        await _context.UserRoles.AddRangeAsync(command.ToEntity(), cancellationToken);
         
         return await _context.SaveChangesAsync(cancellationToken) > 0
             ? Result.Success()

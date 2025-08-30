@@ -3,8 +3,16 @@ using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
 
+/// <summary>
+/// Мапперы для <see cref="Employee"/>.
+/// </summary>
 public static class EmployeeMapping
 {
+    /// <summary>
+    /// Детальный маппинг <see cref="Employee"/> в <see cref="EmployeeResponseDto"/>.
+    /// </summary>
+    /// <param name="employee">Сотрудник.</param>
+    /// <returns><see cref="EmployeeResponseDto"/>.</returns>
     public static EmployeeResponseDto ToDetailedResponse(this Employee employee)
     {
         return new EmployeeResponseDto()
@@ -18,6 +26,11 @@ public static class EmployeeMapping
         };
     }
 
+    /// <summary>
+    /// Краткий маппинг <see cref="Employee"/> в <see cref="EmployeeResponseDto"/>.
+    /// </summary>
+    /// <param name="employee">Сотрудник.</param>
+    /// <returns><see cref="EmployeeResponseDto"/>.</returns>
     public static GetUsersEmployeeResponseDto ToShortResponse(this Employee employee)
     {
         return new GetUsersEmployeeResponseDto

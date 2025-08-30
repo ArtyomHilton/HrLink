@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddUser;
 
+/// <see cref="IAddUserUseCase"/>
 public class AddUserUseCase : IAddUserUseCase
 {
+    /// <inheritdoc cref="IApplicationDbContext"/>
     private readonly IApplicationDbContext _context;
 
     public AddUserUseCase(IApplicationDbContext context)
@@ -15,6 +17,7 @@ public class AddUserUseCase : IAddUserUseCase
         _context = context;
     }
     
+    /// <inheritdoc />
     public async Task<Result<User?>> Execute(AddUserCommand command, CancellationToken cancellationToken)
     {
         if (await _context.Users.AnyAsync(x=> x.Email == command.Email, cancellationToken))
@@ -28,7 +31,7 @@ public class AddUserUseCase : IAddUserUseCase
             .ToListAsync(cancellationToken);
 
         var entry = await _context.Users
-            .AddAsync(command.ToModel(), cancellationToken);
+            .AddAsync(command.ToEntity(), cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
 

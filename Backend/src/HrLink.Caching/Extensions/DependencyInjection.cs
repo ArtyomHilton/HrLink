@@ -6,8 +6,17 @@ using StackExchange.Redis;
 
 namespace HrLink.Caching.Extensions;
 
+/// <summary>
+/// Содержит методы расширения слоя <see cref="Caching"/>.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Конфигурирует и регистрирует сервис кэширования.
+    /// </summary>
+    /// <param name="serviceCollection"><see cref="IServiceCollection"/></param>
+    /// <param name="configuration"><see cref="IConfiguration"/></param>
+    /// <returns>Измененный <see cref="IServiceCollection"/></returns>
     public static IServiceCollection AddCaching(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         serviceCollection.AddStackExchangeRedisCache(options =>

@@ -1,14 +1,17 @@
 using HrLink.Application.Common.Results;
 using HrLink.Application.Interfaces;
-using HrLink.Application.UseCases.UserUseCases.GetUsers.Enums;
 using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.GetUsers;
 
+/// <inheritdoc cref="IGetUsersUseCase"/>
 public class GetUsersUseCase : IGetUsersUseCase
 {
+    /// <inheritdoc cref="IApplicationDbContext"/>
     private readonly IApplicationDbContext _context;
+
+    /// <inheritdoc cref="ICacheService"/>
     private readonly ICacheService _cacheService;
 
 
@@ -18,6 +21,7 @@ public class GetUsersUseCase : IGetUsersUseCase
         _cacheService = cacheService;
     }
 
+    /// <inheritdoc />
     public async Task<Result<List<User>?>> Execute(GetUsersQuery query, CancellationToken cancellationToken)
     {
         var users = await _cacheService
@@ -36,6 +40,7 @@ public class GetUsersUseCase : IGetUsersUseCase
             .SortBy(query.SortBy)
             .Skip((query.Page - 1) * query.ItemPerPage)
             .Take(query.ItemPerPage)
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         if (users.Any())

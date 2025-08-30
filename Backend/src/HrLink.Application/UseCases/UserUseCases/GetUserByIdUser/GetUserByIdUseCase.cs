@@ -17,9 +17,9 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
         _cacheService = cacheService;
     }
 
-    public async Task<Result<User?>> Execute(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<User?>> Execute(GetUserByIdQuery query, CancellationToken cancellationToken)
     {
-        var user = await _cacheService.GetAsync<User?>($"user_{id}", cancellationToken);
+        var user = await _cacheService.GetAsync<User?>($"user_{query.Id}", cancellationToken);
 
         if (user is not null)
         {
@@ -30,15 +30,16 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
             .Include(x => x.Employee)
             .ThenInclude(x => x.Interviews)
             .ThenInclude(x => x.Candidate)
-            .FirstOrDefaultAsync(x => x.Id == id && !x.IsDelete, cancellationToken);
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == query.Id && !x.IsDelete, cancellationToken);
 
         if (user is null)
         {
             return Result.Failure<User?>(user,
-                new NotFoundError($"User with {nameof(id)}: {id} not found", nameof(id)));
+                new NotFoundError($"User with {nameof(query.Id)}: {query.Id} not found", nameof(query.Id)));
         }
 
-        await _cacheService.SetAsync<User>($"user_{id}", user, cancellationToken);
+        await _cacheService.SetAsync<User>($"user_{query.Id}", user, cancellationToken);
 
         return Result.Success<User?>(user);
     }
