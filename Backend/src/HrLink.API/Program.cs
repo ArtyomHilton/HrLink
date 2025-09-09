@@ -1,13 +1,17 @@
 using HrLink.Application.Extensions;
 using HrLink.Caching.Extensions;
+using HrLink.Email;
 using HrLink.Persistence.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
+
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
+builder.Services.AddEmail();
 builder.Services.AddUseCases();
 
 builder.Services.AddControllers();
