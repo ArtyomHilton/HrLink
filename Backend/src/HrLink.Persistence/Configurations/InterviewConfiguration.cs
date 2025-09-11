@@ -14,10 +14,6 @@ public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
         builder.ToTable("Interview");
         
         builder.HasKey(x => x.Id);
-        builder.HasIndex(x => x.Id)
-            .IsUnique();
-        builder.Property(x => x.Id)
-            .IsRequired();
 
         builder.Property(x => x.CandidateId)
             .IsRequired();
@@ -30,10 +26,12 @@ public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
 
         builder.HasOne(x => x.Candidate)
             .WithMany(x => x.Interviews)
-            .HasForeignKey(x => x.CandidateId);
+            .HasForeignKey(x => x.CandidateId)
+            .IsRequired();
 
         builder.HasOne(x => x.Employee)
             .WithMany(x => x.Interviews)
-            .HasForeignKey(x => x.EmployeeId);
+            .HasForeignKey(x => x.EmployeeId)
+            .IsRequired();
     }
 }

@@ -8,17 +8,17 @@ public class Employee
     /// <summary>
     /// Идентификатор.
     /// </summary>
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; }
     
     /// <summary>
     /// Должность.
     /// </summary>
-    public required string Position { get; set; }
+    public string Position { get; set; } = string.Empty;
     
     /// <summary>
     /// Рабочая электронная почта.
     /// </summary>
-    public required string WorkEmail { get; set; }
+    public  string WorkEmail { get; set; } = string.Empty;
     
     /// <summary>
     /// Рабочий номер телефона.
@@ -28,7 +28,7 @@ public class Employee
     /// <summary>
     /// Дата начала работы.
     /// </summary>
-    public required DateTime DateOfEmployment { get; set; }
+    public DateTime DateOfEmployment { get; set; }
     
     /// <summary>
     /// Дата последнего обновления.

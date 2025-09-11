@@ -8,33 +8,33 @@ public class Candidate
     /// <summary>
     /// Идентификатор.
     /// </summary>
-    public required Guid Id { get; set; }
-    
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Имя.
     /// </summary>
-    public required string FirstName { get; set; }
-    
+    public string FirstName { get; set; } = string.Empty;
+
     /// <summary>
     /// Фамилия.
     /// </summary>
-    public required string SecondName { get; set; }
-    
+    public string SecondName { get; set; } = string.Empty;
+
     /// <summary>
     /// Отчество.
     /// </summary>
     public string? Patronymic { get; set; }
-    
+
     /// <summary>
     /// Электронная почта.
     /// </summary>
-    public required string Email { get; set; }
-    
+    public string Email { get; set; } = string.Empty;
+
     /// <summary>
     /// Номер телефона.
     /// </summary>
     public string? PhoneNumber { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Навигационное свойство с <see cref="Interview"/>.
     /// </summary>

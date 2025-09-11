@@ -15,10 +15,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("User");
         
         builder.HasKey(x => x.Id);
-        builder.HasIndex(x => x.Id)
-            .IsUnique();
-        builder.Property(x => x.Id)
-            .IsRequired();
         
         builder.Property(x => x.FirstName)
             .IsRequired()
@@ -58,6 +54,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasOne(x => x.Employee)
             .WithOne(x => x.User)
-            .HasForeignKey<User>(x => x.EmployeeId);
+            .HasForeignKey<User>(x => x.EmployeeId)
+            .IsRequired(false);
     }
 }

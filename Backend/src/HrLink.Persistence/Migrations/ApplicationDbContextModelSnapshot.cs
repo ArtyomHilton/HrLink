@@ -17,7 +17,7 @@ namespace HrLink.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -51,9 +51,6 @@ namespace HrLink.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.ToTable("Candidate", (string)null);
                 });
 
@@ -82,9 +79,6 @@ namespace HrLink.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.HasIndex("WorkEmail")
                         .IsUnique();
 
@@ -109,14 +103,16 @@ namespace HrLink.Persistence.Migrations
                     b.Property<DateTime>("InterviewDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("VacancyId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasIndex("VacancyId");
 
                     b.ToTable("Interview", (string)null);
                 });
@@ -132,9 +128,6 @@ namespace HrLink.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -190,9 +183,6 @@ namespace HrLink.Persistence.Migrations
                     b.HasIndex("EmployeeId")
                         .IsUnique();
 
-                    b.HasIndex("Id")
-                        .IsUnique();
-
                     b.ToTable("User", (string)null);
                 });
 
@@ -211,6 +201,96 @@ namespace HrLink.Persistence.Migrations
                     b.ToTable("UserRole", (string)null);
                 });
 
+            modelBuilder.Entity("HrLink.Domain.Entities.Vacancy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("MaxSalary")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("MinSalary")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("StatusId")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Vacancy", null, t =>
+                        {
+                            t.HasCheckConstraint("ValidMaxSalary", "\"MaxSalary\" IS NULL OR \"MaxSalary\" <= 79228162514264337593543950335");
+
+                            t.HasCheckConstraint("ValidMinSalary", "\"MinSalary\" IS NULL OR \"MinSalary\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.VacancyStatus", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("VacancyStatus", (string)null);
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.VacancyWorkFormat", b =>
+                {
+                    b.Property<Guid>("VacancyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("WorkFormatId")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("VacancyId", "WorkFormatId");
+
+                    b.HasIndex("WorkFormatId");
+
+                    b.ToTable("VacancyWorkFormat", (string)null);
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.WorkFormat", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<short>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("WorkFormat", (string)null);
+                });
+
             modelBuilder.Entity("HrLink.Domain.Entities.Interview", b =>
                 {
                     b.HasOne("HrLink.Domain.Entities.Candidate", "Candidate")
@@ -225,9 +305,17 @@ namespace HrLink.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HrLink.Domain.Entities.Vacancy", "Vacancy")
+                        .WithMany("Interviews")
+                        .HasForeignKey("VacancyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Candidate");
 
                     b.Navigation("Employee");
+
+                    b.Navigation("Vacancy");
                 });
 
             modelBuilder.Entity("HrLink.Domain.Entities.User", b =>
@@ -258,6 +346,36 @@ namespace HrLink.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HrLink.Domain.Entities.Vacancy", b =>
+                {
+                    b.HasOne("HrLink.Domain.Entities.VacancyStatus", "Status")
+                        .WithMany("Vacancies")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.VacancyWorkFormat", b =>
+                {
+                    b.HasOne("HrLink.Domain.Entities.Vacancy", "Vacancy")
+                        .WithMany("WorkFormats")
+                        .HasForeignKey("VacancyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HrLink.Domain.Entities.WorkFormat", "WorkFormat")
+                        .WithMany("WorkFormats")
+                        .HasForeignKey("WorkFormatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vacancy");
+
+                    b.Navigation("WorkFormat");
+                });
+
             modelBuilder.Entity("HrLink.Domain.Entities.Candidate", b =>
                 {
                     b.Navigation("Interviews");
@@ -278,6 +396,23 @@ namespace HrLink.Persistence.Migrations
             modelBuilder.Entity("HrLink.Domain.Entities.User", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.Vacancy", b =>
+                {
+                    b.Navigation("Interviews");
+
+                    b.Navigation("WorkFormats");
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.VacancyStatus", b =>
+                {
+                    b.Navigation("Vacancies");
+                });
+
+            modelBuilder.Entity("HrLink.Domain.Entities.WorkFormat", b =>
+                {
+                    b.Navigation("WorkFormats");
                 });
 #pragma warning restore 612, 618
         }

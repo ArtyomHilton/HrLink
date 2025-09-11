@@ -8,12 +8,12 @@ public class Role
     /// <summary>
     /// Идентификатор.
     /// </summary>
-    public required Guid Id { get; set; }
-    
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Название.
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
     
     /// <summary>
     /// Навигационное свойство с <see cref="UserRole"/>.

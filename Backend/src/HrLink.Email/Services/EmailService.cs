@@ -38,5 +38,6 @@ public class EmailService : IEmailService
         await smtpClient.AuthenticateAsync(_smtpOptions.Value.Username, _smtpOptions.Value.Password,
             cancellationToken);
         await smtpClient.SendAsync(message, cancellationToken);
+        await smtpClient.DisconnectAsync(true, cancellationToken);
     }
 }

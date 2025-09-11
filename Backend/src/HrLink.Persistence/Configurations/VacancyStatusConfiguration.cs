@@ -4,18 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HrLink.Persistence.Configurations;
 
-/// <summary>
-/// Конфигурация для <see cref="Role"/>.
-/// </summary>
-public class RoleConfiguration : IEntityTypeConfiguration<Role>
+public class VacancyStatusConfiguration : IEntityTypeConfiguration<VacancyStatus>
 {
-    public void Configure(EntityTypeBuilder<Role> builder)
+    public void Configure(EntityTypeBuilder<VacancyStatus> builder)
     {
-        builder.ToTable("Role");
-        
+        builder.ToTable("VacancyStatus");
+
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Name)
+        builder.Property(x=> x.Name)
             .IsRequired();
         builder.HasIndex(x => x.Name)
             .IsUnique();

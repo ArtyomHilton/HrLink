@@ -14,10 +14,6 @@ public class CandidateConfiguration : IEntityTypeConfiguration<Candidate>
         builder.ToTable("Candidate");
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id)
-            .IsRequired();
-        builder.HasIndex(x => x.Id)
-            .IsUnique();
 
         builder.Property(x => x.FirstName)
             .HasMaxLength(50)

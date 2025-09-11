@@ -13,6 +13,11 @@ public interface IApplicationDbContext
     DbSet<Candidate> Candidates { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<UserRole> UserRoles { get; set; }
+    DbSet<Interview> Interviews { get; set; }
+    DbSet<Vacancy> Vacancies { get; set; }
+    DbSet<VacancyStatus> VacancyStatuses { get; set; }
+    DbSet<VacancyWorkFormat> VacancyWorkFormats  { get; set; }
+    DbSet<WorkFormat> WorkFormats { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     int SaveChanges();

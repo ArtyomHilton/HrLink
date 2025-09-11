@@ -17,10 +17,12 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 
         builder.HasOne(x => x.User)
             .WithMany(x => x.UserRoles)
-            .HasForeignKey(x=> x.UserId);
+            .HasForeignKey(x=> x.UserId)
+            .IsRequired();
         
         builder.HasOne(x => x.Role)
             .WithMany(x => x.UserRoles)
-            .HasForeignKey(x=> x.RoleId);
+            .HasForeignKey(x=> x.RoleId)
+            .IsRequired();
     }
 }
