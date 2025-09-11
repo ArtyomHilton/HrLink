@@ -4,7 +4,7 @@ using HrLink.Domain.Entities;
 
 namespace HrLink.API.DTOs.Employees;
 
-public class EmployeeResponseDto
+public record EmployeeResponseDto
 {
     public required Guid Id { get; set; }
     public required string Position { get; set; }

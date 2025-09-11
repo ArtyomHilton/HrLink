@@ -2,7 +2,7 @@ using HrLink.Application.UseCases.UserUseCases.GetUsers;
 
 namespace HrLink.API.DTOs.Users;
 
-public class GetUsersRequestDto
+public record GetUsersRequestDto
 {
     public int Page { get; set; } = 1;
     public int ItemPerPage { get; set; } = 10;

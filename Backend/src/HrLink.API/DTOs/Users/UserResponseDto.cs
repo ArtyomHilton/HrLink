@@ -3,7 +3,7 @@ using HrLink.Domain.Entities;
 
 namespace HrLink.API.DTOs.Users;
 
-public class UserResponseDto
+public record UserResponseDto
 {
     public Guid Id { get; set; }
     public required string FirstName { get; set; }
