@@ -1,3 +1,4 @@
+using HrLink.API.Middlewares;
 using HrLink.Application.Extensions;
 using HrLink.Caching.Extensions;
 using HrLink.Email;
@@ -20,6 +21,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseGlobalExceptionHandlerMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
