@@ -1,3 +1,4 @@
+using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IAddRolesForUserUseCase, AddRolesForUserUseCase>();
         serviceCollection.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
         serviceCollection.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
+        serviceCollection.AddScoped<IAddInterviewUseCase, AddInterviewUseCase>();
         
         return serviceCollection;
     }

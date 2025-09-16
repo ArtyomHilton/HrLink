@@ -25,8 +25,4 @@
     <ProjectReference Include="..\HrLink.Caching\HrLink.Caching.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Middlewares\" />
-  </ItemGroup>
-
 </Project>
