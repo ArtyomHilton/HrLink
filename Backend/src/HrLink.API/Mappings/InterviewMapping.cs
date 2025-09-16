@@ -1,4 +1,5 @@
 using HrLink.API.DTOs.Interviews;
+using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
@@ -33,4 +34,7 @@ public static class InterviewMapping
             .Select(x => x.ToResponse())
             .ToList();
     }
+
+    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto) =>
+        new AddInterviewCommand(dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
 }

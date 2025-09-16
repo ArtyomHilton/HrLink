@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HrLink.API.Controllers;
 
 [ApiController]
-[Route("api/users")]
+[Route("api/user")]
 public class UsersControllers : ControllerBase
 {
     [HttpPost]

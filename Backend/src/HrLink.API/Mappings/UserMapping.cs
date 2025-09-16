@@ -1,4 +1,7 @@
 using HrLink.API.DTOs.Users;
+using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
+using HrLink.Application.UseCases.UserUseCases.AddUser;
+using HrLink.Application.UseCases.UserUseCases.GetUsers;
 using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
@@ -63,4 +66,26 @@ public static class UserMapping
         users
             .Select(x => x.ToShortResponse())
             .ToList();
+
+    public static GetUsersQuery ToQuery(this GetUsersRequestDto dto) =>
+        new GetUsersQuery(dto.Page, dto.ItemPerPage, dto.SortBy);
+
+    public static AddUserCommand ToCommand(this AddUserRequestDto dto) =>
+        new AddUserCommand()
+        {
+            FirstName = dto.FirstName,
+            SecondName = dto.SecondName,
+            Patronymic = dto.Patronymic,
+            DateOfBirthday = dto.DateOfBirthday,
+            Email = dto.Email,
+            Password = dto.Password, // TODO: Хэширование
+            RoleIds = dto.RoleIds
+        };
+
+    public static AddRolesForUserCommand ToCommand(this AddRolesForUserDto dto, Guid userId) =>
+        new AddRolesForUserCommand()
+        {
+            UserId = userId,
+            RoleIds = dto.RoleIds
+        };
 }
