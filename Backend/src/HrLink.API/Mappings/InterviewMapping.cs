@@ -35,6 +35,14 @@ public static class InterviewMapping
             .ToList();
     }
 
-    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto) =>
-        new AddInterviewCommand(dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
+    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto)
+    {
+        if (dto.VacancyId is null || dto.CandidateId is null || 
+            dto.EmployeeId is null || dto.InterviewDateTime is null)
+        {
+            throw new ArgumentNullException(nameof(dto), "DTO must be validated before conversion");
+        }
+
+        return new AddInterviewCommand(dto.VacancyId.Value, dto.CandidateId.Value, dto.EmployeeId.Value, dto.InterviewDateTime.Value);
+    }
 }

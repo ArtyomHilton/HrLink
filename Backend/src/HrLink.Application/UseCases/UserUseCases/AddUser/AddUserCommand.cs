@@ -11,12 +11,12 @@ public class AddUserCommand
     /// <summary>
     /// Имя.
     /// </summary>
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; }
     
     /// <summary>
     /// Фамилия.
     /// </summary>
-    public required string SecondName { get; set; }
+    public string SecondName { get; set; }
     
     /// <summary>
     /// Отчество.
@@ -26,22 +26,33 @@ public class AddUserCommand
     /// <summary>
     /// Дата рождения.
     /// </summary>
-    public required DateTime DateOfBirthday { get; set; }
+    public DateTime DateOfBirthday { get; set; }
     
     /// <summary>
     /// Электронная почта.
     /// </summary>
-    public required string Email { get; set; }
+    public string Email { get; set; }
     
     /// <summary>
     /// Пароль.
     /// </summary>
-    public required string Password { get; set; }
+    public string Password { get; set; }
     
     /// <summary>
     /// Список идентификаторов ролей пользователей.
     /// </summary>
-    public required List<Guid> RoleIds { get; set; }
+    public List<Guid>? RoleIds { get; set; }
+
+    public AddUserCommand(string firstName, string secondName, string? patronymic, DateTime dateOfBirthday, string email, string password, List<Guid>? roleIds)
+    {
+        FirstName = firstName;
+        SecondName = secondName;
+        Patronymic = patronymic;
+        DateOfBirthday = dateOfBirthday;
+        Email = email;
+        Password = password;
+        RoleIds = roleIds;
+    }
     
     /// <summary>
     /// Маппит команду в доменную сущность <see cref="User"/>.

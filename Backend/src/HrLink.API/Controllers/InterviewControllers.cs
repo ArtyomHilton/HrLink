@@ -1,6 +1,7 @@
 using HrLink.API.DTOs.Errors;
 using HrLink.API.DTOs.Interviews;
 using HrLink.API.Mappings;
+using HrLink.API.Validators;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,13 @@ public class InterviewControllers : ControllerBase
         [FromServices] IAddInterviewUseCase useCase,
         CancellationToken cancellationToken)
     {
+        var validateResult = dto.Validate();
+        
+        if (validateResult.IsFailure)
+        {
+            return BadRequest(validateResult.Error!.ToResponse(StatusCodes.Status400BadRequest));
+        }
+        
         var result = await useCase.Execute(dto.ToCommand(), cancellationToken);
 
         if (result.IsFailure)

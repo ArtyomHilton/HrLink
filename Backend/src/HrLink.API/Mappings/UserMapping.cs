@@ -70,17 +70,18 @@ public static class UserMapping
     public static GetUsersQuery ToQuery(this GetUsersRequestDto dto) =>
         new GetUsersQuery(dto.Page, dto.ItemPerPage, dto.SortBy);
 
-    public static AddUserCommand ToCommand(this AddUserRequestDto dto) =>
-        new AddUserCommand()
+    public static AddUserCommand ToCommand(this AddUserRequestDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.FirstName) || string.IsNullOrWhiteSpace(dto.SecondName) ||
+            dto.DateOfBirthday is null || string.IsNullOrWhiteSpace(dto.Email) ||
+            string.IsNullOrWhiteSpace(dto.Password))
         {
-            FirstName = dto.FirstName,
-            SecondName = dto.SecondName,
-            Patronymic = dto.Patronymic,
-            DateOfBirthday = dto.DateOfBirthday,
-            Email = dto.Email,
-            Password = dto.Password, // TODO: Хэширование
-            RoleIds = dto.RoleIds
-        };
+            throw new ArgumentNullException(nameof(dto), "DTO must be validated before conversion");
+        }
+
+        return new AddUserCommand(dto.FirstName, dto.SecondName, dto.Patronymic, dto.DateOfBirthday.Value, dto.Email, dto.Password, dto.RoleIds);
+    }
+
 
     public static AddRolesForUserCommand ToCommand(this AddRolesForUserDto dto, Guid userId) =>
         new AddRolesForUserCommand()

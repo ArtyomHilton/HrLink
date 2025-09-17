@@ -1,11 +1,11 @@
 using HrLink.API.DTOs.Users;
 using HrLink.API.Mappings;
+using HrLink.API.Validators;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using HrLink.Application.UseCases.UserUseCases.GetUsers;
-using HrLink.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrLink.API.Controllers;
@@ -22,17 +22,20 @@ public class UsersControllers : ControllerBase
         [FromServices] IAddUserUseCase useCase,
         CancellationToken cancellationToken)
     {
+        var validateResult = dto.Validate();
+
+        if (validateResult.IsFailure)
+        {
+            return BadRequest(validateResult.Error!.ToResponse(StatusCodes.Status400BadRequest));
+        }
+        
         var result = await useCase.Execute(dto.ToCommand(), cancellationToken);
 
         if (result.IsFailure)
         {
             return result.Error switch
             {
-                UserEmailExistError => BadRequest(new
-                {
-                    Message = result.Error.Message,
-                    Target = result.Error.Target
-                }),
+                not null => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
         }
@@ -54,16 +57,7 @@ public class UsersControllers : ControllerBase
         {
             return result.Error switch
             {
-                NoRolesError => BadRequest(new
-                {
-                    Message = result.Error.Message,
-                    Target = result.Error.Target
-                }),
-                Error => BadRequest(new
-                {
-                    Message = result.Error.Message,
-                    Target = result.Error.Target
-                }),
+                not null => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
         }
@@ -83,11 +77,7 @@ public class UsersControllers : ControllerBase
         {
             return result.Error switch
             {
-                NotFoundError => NotFound(new
-                {
-                    Message = result.Error.Message,
-                    Target = result.Error.Target
-                }),
+                NotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
         }
