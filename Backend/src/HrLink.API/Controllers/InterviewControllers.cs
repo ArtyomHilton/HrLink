@@ -3,6 +3,7 @@ using HrLink.API.DTOs.Interviews;
 using HrLink.API.Mappings;
 using HrLink.API.Validators;
 using HrLink.Application.Common.Results.Errors;
+using HrLink.Application.Interfaces;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using Microsoft.AspNetCore.Mvc;
 
