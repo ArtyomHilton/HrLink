@@ -1,3 +1,4 @@
+using HrLink.Application.Common;
 using HrLink.Domain.Entities;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddUser;
@@ -70,9 +71,9 @@ public class AddUserCommand
             Patronymic = this.Patronymic,
             DateOfBirthday = this.DateOfBirthday,
             Email = this.Email,
-            PasswordHash = this.Password, // TODO: Хэширование
+            PasswordHash = PasswordHasher.HashPassword(this.Password),
             IsDelete = false,
-            UserRoles = RoleIds.Select(x => new UserRole()
+            UserRoles = RoleIds!.Select(x => new UserRole()
             {
                 RoleId = x,
                 UserId = userId
