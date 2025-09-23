@@ -1,6 +1,7 @@
 using HrLink.API.DTOs.Users;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
+using HrLink.Application.UseCases.UserUseCases.ChangePassword;
 using HrLink.Application.UseCases.UserUseCases.GetUsers;
 using HrLink.Domain.Entities;
 
@@ -89,4 +90,7 @@ public static class UserMapping
             UserId = userId,
             RoleIds = dto.RoleIds
         };
+
+    public static ChangeUserPasswordCommand ToCommand(this ChangeUserPasswordRequestDto dto, Guid userId) =>
+        new ChangeUserPasswordCommand(userId, dto.Password, dto.NewPassword);
 }

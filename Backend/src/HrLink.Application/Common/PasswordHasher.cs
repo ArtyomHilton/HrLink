@@ -8,14 +8,12 @@ namespace HrLink.Application.Common;
 
 public static class PasswordHasher
 {
-    private const int WorkFactor = 13;
     private const int SaltSize = 16;
     private const int HashSize = 32;
 
     public static string HashPassword(string password)
     {
         var salt = GenerateSalt();
-
         var hash = CreateHash(password, salt);
 
         var hashBytes = new byte[SaltSize + HashSize];

@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using HrLink.API.DTOs.Users;
 using HrLink.Application.Common.Results;
@@ -78,14 +79,45 @@ public static class UserValidators
             return Result.Failure(new ValidateError(string.Format(ErrorInvalidFormat, nameof(dto.Email)), nameof(dto.Email)));
         }
 
-        if (string.IsNullOrWhiteSpace(dto.Password))
+        var passwordValidateResult = PasswordValidate(dto.Password);
+        
+        return passwordValidateResult.IsFailure ? passwordValidateResult : Result.Success();
+    }
+
+    public static Result Validate(this ChangeUserPasswordRequestDto dto)
+    {
+        if (dto.Password.Equals(dto.NewPassword))
         {
-            return Result.Failure(new ValidateError(string.Format(ErrorValidateNotEmptyMessage, nameof(dto.Password)), nameof(dto.Password)));
+            return Result.Failure(new ValidateError("password Equals NewPassword", nameof(dto.NewPassword)));
+        }
+        
+        var passwordValidateResult = PasswordValidate(dto.Password);
+
+        if (passwordValidateResult.IsFailure)
+        {
+            return passwordValidateResult;
+        }
+        
+        var newPasswordValidateResult = PasswordValidate(dto.NewPassword);
+
+        if (newPasswordValidateResult.IsFailure)
+        {
+            return newPasswordValidateResult;
+        }
+        
+        return Result.Success();
+    }
+
+    private static Result PasswordValidate(string? password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return Result.Failure(new ValidateError(string.Format(ErrorValidateNotEmptyMessage, nameof(password)), nameof(password)));
         }
 
-        if (!PasswordRegex.IsMatch(dto.Password))
+        if (!PasswordRegex.IsMatch(password))
         {
-            return Result.Failure(new ValidateError(string.Format(ErrorInvalidFormat, nameof(dto.Password)), nameof(dto.Password)));
+            return Result.Failure(new ValidateError(string.Format(ErrorInvalidFormat, nameof(password)), nameof(password)));
         }
         
         return Result.Success();
