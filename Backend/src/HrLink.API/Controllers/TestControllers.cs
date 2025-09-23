@@ -1,4 +1,5 @@
 using HrLink.API.DTOs.Test;
+using HrLink.Application.Common;
 using HrLink.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace HrLink.API.Controllers;
 public class TestControllers : ControllerBase
 {
     [HttpPost]
+    [Route("/email")]
     public async Task<IActionResult> SendEmail([FromBody] EmailRequest request, IEmailService emailService,
         CancellationToken cancellationToken)
     {
