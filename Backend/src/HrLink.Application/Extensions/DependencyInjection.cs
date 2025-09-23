@@ -1,6 +1,7 @@
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
+using HrLink.Application.UseCases.UserUseCases.ChangePassword;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using HrLink.Application.UseCases.UserUseCases.GetUsers;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ public static class DependencyInjection
         serviceCollection.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
         serviceCollection.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
         serviceCollection.AddScoped<IAddInterviewUseCase, AddInterviewUseCase>();
+        serviceCollection.AddScoped<IChangeUserPasswordUseCase, ChangeUserPasswordUseCase>();
         
         return serviceCollection;
     }
