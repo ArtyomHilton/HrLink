@@ -35,8 +35,8 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
 
         if (user is null)
         {
-            return Result.Failure<User?>(user,
-                new NotFoundError($"User with {nameof(query.Id)}: {query.Id} not found", nameof(query.Id)));
+            return Result.Failure<User?>(user, new NotFoundError<User>(nameof(query.Id),
+                new Dictionary<string, object?>() { ["UserId"] = query.Id }));
         }
 
         await _cacheService.SetAsync<User>($"user_{query.Id}", user, cancellationToken);

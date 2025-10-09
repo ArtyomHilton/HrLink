@@ -31,7 +31,6 @@ public class InterviewControllers : ControllerBase
         {
             return result.Error switch
             {
-                InterviewSchedulingConflictError => Conflict(result.Error.ToResponse(StatusCodes.Status409Conflict)),
                 not null => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError,
                     new ErrorResponse(StatusCodes.Status500InternalServerError,

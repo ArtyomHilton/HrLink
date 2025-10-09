@@ -1,13 +1,15 @@
 namespace HrLink.Application.Common.Results.Errors;
 
-public class NotFoundError : IError
+public class NotFoundError<T> : IError
 {
-    public string Message { get; init; }
+    public string ErrorCode { get; init; }
     public string Target { get; init; }
+    public Dictionary<string, object?>? Metadata { get; init; }
 
-    public NotFoundError(string message, string target)
+    public NotFoundError(string target, Dictionary<string, object?>? metadata = null)
     {
-        Message = message;
+        ErrorCode = $"{typeof(T).Name}NotFound";
         Target = target;
+        Metadata = metadata;
     }
 }

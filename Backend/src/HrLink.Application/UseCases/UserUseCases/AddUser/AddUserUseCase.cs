@@ -22,11 +22,11 @@ public class AddUserUseCase : IAddUserUseCase
     {
         if (await _context.Users.AnyAsync(x=> x.Email == command.Email, cancellationToken))
         {
-            return Result.Failure<User?>(null, new UserEmailExistError("Данные Email уже занят", nameof(command.Email)));
+            return Result.Failure<User?>(null, new ValidateError("EmailExist", nameof(command.Email)));
         }
 
         command.RoleIds = await _context.Roles
-            .Where(x=> command.RoleIds.Contains(x.Id))
+            .Where(x=> command.RoleIds!.Contains(x.Id))
             .Select(x=> x.Id)
             .ToListAsync(cancellationToken);
 
