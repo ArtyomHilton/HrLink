@@ -1,8 +1,10 @@
+using System.Reflection;
+using FluentValidation;
 using HrLink.API.Middlewares;
 using HrLink.Application.Extensions;
+using HrLink.Application.Interfaces;
 using HrLink.Caching.Extensions;
 using HrLink.Email;
-using HrLink.Localization.Extensions;
 using HrLink.Persistence.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,12 +19,11 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
 
+builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(IEmailService)));
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddEmail();
-builder.Services.AddCustomLocalization();
 builder.Services.AddUseCases();
-
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

@@ -1,15 +1,16 @@
+using HrLink.Domain.Entities;
+
 namespace HrLink.Application.Common.Results.Errors;
 
-public class Error : IError
+public class UserHavingRoles : IError
 {
     public string ErrorCode { get; init; }
     public string Target { get; init; }
     public Dictionary<string, object?>? Metadata { get; init; }
 
-    public Error(string target, Dictionary<string, object?>? metadata = null)
+    public UserHavingRoles(string target)
     {
-        ErrorCode = "Произошла непредвиденная ошибка";
+        ErrorCode = $"{nameof(User)}HavingRoles";
         Target = target;
-        Metadata = metadata;
     }
 }

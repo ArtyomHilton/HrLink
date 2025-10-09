@@ -7,6 +7,7 @@ using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.ChangePassword;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using HrLink.Application.UseCases.UserUseCases.GetUsers;
+using HrLink.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrLink.API.Controllers;
@@ -78,7 +79,7 @@ public class UsersControllers : ControllerBase
         {
             return result.Error switch
             {
-                NotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
+                NotFoundError<User> => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
         }
@@ -116,7 +117,7 @@ public class UsersControllers : ControllerBase
         {
             return result.Error switch
             {
-                NotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
+                NotFoundError<User> => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
                 ValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError,
                     result.Error?.ToResponse(StatusCodes.Status500InternalServerError))

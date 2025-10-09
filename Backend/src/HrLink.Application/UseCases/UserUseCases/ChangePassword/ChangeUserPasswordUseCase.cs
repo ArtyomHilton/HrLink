@@ -2,6 +2,7 @@ using HrLink.Application.Common;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.Interfaces;
+using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.ChangePassword;
@@ -25,7 +26,8 @@ public class ChangeUserPasswordUseCase : IChangeUserPasswordUseCase
 
         if (currentHashPassword is null)
         {
-            return Result.Failure(new NotFoundError("UserNotFound", nameof(command.Id)));
+            return Result.Failure(new NotFoundError<User>(nameof(command.Id), 
+                new Dictionary<string, object?>() { ["userId"] = command.Id}));
         }
 
         if (!PasswordHasher.VerifyPassword(command.Password, currentHashPassword))

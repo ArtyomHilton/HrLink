@@ -25,7 +25,7 @@ public class AddRolesForUserUseCase : IAddRolesForUserUseCase
             .ToListAsync(cancellationToken);
 
         if (!command.RoleIds!.Any())
-            return Result.Failure(new NoRolesError("Указанные вами роли не существуют", nameof(command.RoleIds)));
+            return Result.Failure(new ValidateError("RolesNotExist", nameof(command.RoleIds)));
 
         var userRolesIds = await _context.UserRoles
             .Where(x => x.UserId == command.UserId && command.RoleIds.Contains(x.RoleId))
@@ -37,8 +37,7 @@ public class AddRolesForUserUseCase : IAddRolesForUserUseCase
             .ToList();
 
         if (!command.RoleIds!.Any())
-            return Result.Failure(new NoRolesError("Указанные вами роли уже присутствуют у этого пользователя",
-                nameof(command.RoleIds)));
+            return Result.Failure(new UserHavingRoles(nameof(command.RoleIds)));
 
         await _context.UserRoles.AddRangeAsync(command.ToEntity(), cancellationToken);
         
