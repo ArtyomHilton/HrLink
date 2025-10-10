@@ -18,7 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-files", "solution-
 		.gitignore = .gitignore
 		..\README.md = ..\README.md
 		HrLink.sln = HrLink.sln
-		..\DevOps\docker-compose.yaml = ..\DevOps\docker-compose.yaml
+		..\DevOps\.env = ..\DevOps\.env
+		..\DevOps\docker-compose.yml = ..\DevOps\docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HrLink.Email", "src\HrLink.Email\HrLink.Email.csproj", "{40C008E1-4D7F-4A5F-9BD2-63DCBFE53F07}"
