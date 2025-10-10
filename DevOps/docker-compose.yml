@@ -1,0 +1,67 @@
+services:
+  hrlink-database:
+    container_name: "HrLink-Database"
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - hrlink-database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+  
+  hrlink-redis:
+    container_name: "HrLink-Redis"
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - hrlink-redis:/data
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      
+  hrlink-opensearch:
+    container_name: "HrLink-OpenSearch"
+    image: opensearchproject/opensearch:3
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - hrlink-opensearch:/usr/share/opensearch/data
+    environment:
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: ${OPENSEARCH_PASSWORD}
+      discovery.type: 'single-node'
+      plugins.security.ssl.http.enabled: "false"
+      #plugins.security.disable: 'true'
+    networks:
+      - "opensearch-net"
+  
+  hrlink-opensearch-dashboard:
+    container_name: "HrLink-OpenSearch-Dashboard"
+    image: opensearchproject/opensearch-dashboards:3
+    ports:
+      - "5601:5601"
+    expose:
+      - "5601"
+    environment:
+      OPENSEARCH_HOSTS: '["http://hrlink-opensearch:9200"]'
+      OPENSEARCH_USERNAME: ${OPENSEARCH_USERNAME}
+      OPENSEARCH_PASSWORD: ${OPENSEARCH_PASSWORD}
+      #DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
+    networks:
+      - "opensearch-net"
+    depends_on:
+      - hrlink-opensearch
+
+volumes:
+  hrlink-database:
+  hrlink-redis:
+  hrlink-opensearch:
+
+networks:
+  opensearch-net:
+    

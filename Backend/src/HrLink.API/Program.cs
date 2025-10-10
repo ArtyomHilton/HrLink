@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentValidation;
+using HrLink.API.Extensions;
 using HrLink.API.Middlewares;
 using HrLink.Application.Extensions;
 using HrLink.Application.Interfaces;
@@ -7,6 +8,9 @@ using HrLink.Caching.Extensions;
 using HrLink.Email;
 using HrLink.Persistence.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using Serilog.Filters;
+using Serilog.Sinks.OpenSearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +23,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
 
+builder.Logging.AddLogger(builder);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(IEmailService)));
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
@@ -30,6 +35,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.ApplyMigrations();
 
 app.UseGlobalExceptionHandlerMiddleware();
 
