@@ -29,4 +29,5 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<VacancyStatus> VacancyStatuses { get; set; }
     public DbSet<VacancyWorkFormat> VacancyWorkFormats { get; set; }
     public DbSet<WorkFormat> WorkFormats { get; set; }
+    public DbSet<Status> Statuses { get; set; }
 }

@@ -33,5 +33,10 @@ public class InterviewConfiguration : IEntityTypeConfiguration<Interview>
             .WithMany(x => x.Interviews)
             .HasForeignKey(x => x.EmployeeId)
             .IsRequired();
+
+        builder.HasOne(x => x.Status)
+            .WithMany(x => x.Interviews)
+            .HasForeignKey(x => x.StatusId)
+            .IsRequired();
     }
 }

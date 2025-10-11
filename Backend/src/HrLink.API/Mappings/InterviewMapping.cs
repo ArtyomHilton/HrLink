@@ -1,5 +1,6 @@
 using HrLink.API.DTOs.Interviews;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
+using HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
 using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
@@ -37,12 +38,16 @@ public static class InterviewMapping
 
     public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto)
     {
-        if (dto.VacancyId is null || dto.CandidateId is null || 
+        if (dto.VacancyId is null || dto.CandidateId is null ||
             dto.EmployeeId is null || dto.InterviewDateTime is null)
         {
             throw new ArgumentNullException(nameof(dto), "DTO must be validated before conversion");
         }
 
-        return new AddInterviewCommand(dto.VacancyId.Value, dto.CandidateId.Value, dto.EmployeeId.Value, dto.InterviewDateTime.Value);
+        return new AddInterviewCommand(dto.VacancyId.Value, dto.CandidateId.Value, dto.EmployeeId.Value,
+            dto.InterviewDateTime.Value);
     }
+
+    public static ChangeInterviewStatusCommand ToCommand(this ChangeInterviewStatusDto dto, Guid interviewId) =>
+        new ChangeInterviewStatusCommand(interviewId, dto.StatusId);
 }

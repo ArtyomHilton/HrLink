@@ -47,4 +47,8 @@ public class Interview
     /// Дата и время начала собеседования.
     /// </summary>
     public DateTime InterviewDateTime { get; set; }
+    
+    public byte StatusId { get; set; }
+    
+    public Status Status { get; set; } = null!;
 }

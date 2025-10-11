@@ -18,6 +18,7 @@ public interface IApplicationDbContext
     DbSet<VacancyStatus> VacancyStatuses { get; set; }
     DbSet<VacancyWorkFormat> VacancyWorkFormats  { get; set; }
     DbSet<WorkFormat> WorkFormats { get; set; }
+    DbSet<Status> Statuses { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     int SaveChanges();
