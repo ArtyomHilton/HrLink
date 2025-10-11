@@ -1,4 +1,5 @@
 using HrLink.Domain.Entities;
+using Status = HrLink.Domain.Enums.Status;
 
 namespace HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 
@@ -23,6 +24,7 @@ public record AddInterviewCommand
         VacancyId = this.VacancyId,
         CandidateId = this.CandidateId,
         EmployeeId = this.EmployeeId,
-        InterviewDateTime = this.InterviewDateTime
+        InterviewDateTime = this.InterviewDateTime,
+        StatusId = (byte)Status.Wait
     };
 }

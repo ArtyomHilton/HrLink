@@ -2,7 +2,6 @@ using FluentValidation;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.Interfaces;
-using HrLink.Application.Validators;
 using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,6 +65,7 @@ public class AddInterviewUseCase : IAddInterviewUseCase
         }
 
         var entry = await _context.Interviews.AddAsync(command.ToEntity(), cancellationToken);
+        
         await _context.SaveChangesAsync(cancellationToken);
 
         return Result.Success<Interview?>(entry.Entity);
