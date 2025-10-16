@@ -1,3 +1,4 @@
+using HrLink.API.DTOs.Errors;
 using HrLink.API.DTOs.Users;
 using HrLink.API.Mappings;
 using HrLink.Application.Common.Results.Errors;
@@ -15,8 +16,8 @@ namespace HrLink.API.Controllers;
 public class UsersControllers : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UserDetailResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddUser([FromBody] AddUserRequest dto,
         [FromServices] IAddUserUseCase useCase,
@@ -38,7 +39,7 @@ public class UsersControllers : ControllerBase
 
     [HttpPost("{id:guid}/roles/add")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddRolesForUser(Guid id,
         [FromBody] AddRolesForUserDto dto,
         [FromServices] IAddRolesForUserUseCase useCase,
@@ -79,7 +80,7 @@ public class UsersControllers : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(UserShortResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<UserShortResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto,
         IGetUsersUseCase useCase,
         CancellationToken cancellationToken)
@@ -90,6 +91,8 @@ public class UsersControllers : ControllerBase
     }
 
     [HttpPut("/{id:guid}/change-password")]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangePasswordUser(Guid id,
         [FromBody] ChangeUserPasswordRequestDto dto,
         [FromServices] IChangeUserPasswordUseCase useCase,

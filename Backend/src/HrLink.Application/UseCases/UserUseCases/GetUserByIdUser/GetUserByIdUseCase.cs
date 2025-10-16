@@ -1,3 +1,4 @@
+using FluentValidation;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.DTOs;
@@ -11,15 +12,27 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
 {
     private readonly IApplicationDbContext _context;
     private readonly ICacheService _cacheService;
+    private readonly IValidator<GetUserByIdQuery> _validator;
 
-    public GetUserByIdUseCase(IApplicationDbContext context, ICacheService cacheService)
+    public GetUserByIdUseCase(IApplicationDbContext context, ICacheService cacheService,
+        IValidator<GetUserByIdQuery> validator)
     {
         _context = context;
         _cacheService = cacheService;
+        _validator = validator;
     }
 
-    public async Task<Result<UserDetailDataResponse?>> Execute(GetUserByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<UserDetailDataResponse?>> Execute(GetUserByIdQuery query,
+        CancellationToken cancellationToken)
     {
+        var validateResult = await _validator.ValidateAsync(query, cancellationToken);
+
+        if (!validateResult.IsValid)
+        {
+            return Result.Failure<UserDetailDataResponse?>(null,
+                new ValidateError(validateResult.Errors[0].ErrorCode, validateResult.Errors[0].PropertyName));
+        }
+
         var user = await _cacheService.GetAsync<UserDetailDataResponse?>($"user_{query.Id}", cancellationToken);
 
         if (user is not null)
@@ -28,7 +41,7 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
         }
 
         user = await _context.Users
-            .Where(x=> x.Id == query.Id && !x.IsDelete)
+            .Where(x => x.Id == query.Id && !x.IsDelete)
             .Select(x =>
                 new UserDetailDataResponse(
                     x.Id,
@@ -45,9 +58,7 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
                             x.Employee.WorkEmail,
                             x.Employee.WorkPhoneNumber,
                             x.Employee.DateOfEmployment,
-                            x.Employee.Interviews == null
-                                ? new List<InterviewShortDataResponse>()
-                                : x.Employee.Interviews.Select(i => new InterviewShortDataResponse(
+                            x.Employee.Interviews.Select(i => new InterviewShortDataResponse(
                                         i.Id,
                                         i.Vacancy.Position,
                                         i.InterviewDateTime,

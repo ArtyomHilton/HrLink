@@ -3,7 +3,6 @@ using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.DTOs;
 using HrLink.Application.Interfaces;
-using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddUser;
@@ -66,9 +65,7 @@ public class AddUserUseCase : IAddUserUseCase
                             x.Employee.WorkEmail,
                             x.Employee.WorkPhoneNumber,
                             x.Employee.DateOfEmployment,
-                            x.Employee.Interviews == null
-                                ? new List<InterviewShortDataResponse>()
-                                : x.Employee.Interviews.Select(i => new InterviewShortDataResponse(
+                            x.Employee.Interviews.Select(i => new InterviewShortDataResponse(
                                         i.Id,
                                         i.Vacancy.Position,
                                         i.InterviewDateTime,

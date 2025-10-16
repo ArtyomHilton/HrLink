@@ -1,5 +1,4 @@
 using HrLink.Application.Common.Results;
-using HrLink.Domain.Entities;
 
 namespace HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 

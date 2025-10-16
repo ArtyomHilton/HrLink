@@ -4,7 +4,7 @@ namespace HrLink.API.DTOs.Users;
 
 public record AddRolesForUserDto
 {
-    public List<Guid>? RoleIds { get; set; }
+    public ICollection<Guid> RoleIds { get; set; } = new List<Guid>();
 
     public AddRolesForUserCommand ToCommand(Guid userId)
     {

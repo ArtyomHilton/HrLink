@@ -10,5 +10,5 @@ public record EmployeeResponse(
     string WorkEmail,
     string? WorkPhoneNumber,
     string DateOfEmployment,
-    List<InterviewShortResponse>? Interview
+    ICollection<InterviewShortResponse> Interview
 );

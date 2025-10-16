@@ -1,3 +1,4 @@
+using FluentValidation;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.Interfaces;
@@ -9,14 +10,23 @@ namespace HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
 public class ChangeInterviewStatusUseCase : IChangeInterviewStatusUseCase
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<ChangeInterviewStatusCommand> _validator;
 
-    public ChangeInterviewStatusUseCase(IApplicationDbContext context)
+    public ChangeInterviewStatusUseCase(IApplicationDbContext context, IValidator<ChangeInterviewStatusCommand> validator)
     {
         _context = context;
+        _validator = validator;
     }
     
     public async Task<Result> Execute(ChangeInterviewStatusCommand command, CancellationToken cancellationToken)
     {
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (!validationResult.IsValid)
+        {
+            return Result.Failure(new ValidateError(validationResult.Errors[0].ErrorCode, validationResult.Errors[0].PropertyName));
+        }
+        
         if (!await _context.Interviews.AnyAsync(x => x.Id == command.InterviewId, cancellationToken))
         {
             return Result.Failure(new NotFoundError<Interview>(nameof(command.StatusId)));

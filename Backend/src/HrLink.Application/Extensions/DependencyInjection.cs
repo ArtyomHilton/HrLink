@@ -26,5 +26,6 @@ public static class DependencyInjection
             .AddScoped<IGetUsersUseCase, GetUsersUseCase>()
             .AddScoped<IAddInterviewUseCase, AddInterviewUseCase>()
             .AddScoped<IChangeUserPasswordUseCase, ChangeUserPasswordUseCase>()
-            .AddScoped<IChangeInterviewStatusUseCase, ChangeInterviewStatusUseCase>();
+            .AddScoped<IChangeInterviewStatusUseCase, ChangeInterviewStatusUseCase>()
+            .AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
 }

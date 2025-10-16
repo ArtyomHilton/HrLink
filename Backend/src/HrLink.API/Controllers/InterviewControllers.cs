@@ -13,6 +13,9 @@ namespace HrLink.API.Controllers;
 public class InterviewControllers : ControllerBase
 {
     [HttpPost]
+    [ProducesResponseType(typeof(InterviewDetailResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddInterview([FromBody] AddInterviewRequestDto dto,
         [FromServices] IAddInterviewUseCase useCase,
         CancellationToken cancellationToken)
@@ -33,6 +36,10 @@ public class InterviewControllers : ControllerBase
     }
 
     [HttpPut("/{interviewId:guid}/change-status")]
+    [ProducesResponseType(typeof(InterviewDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ChangeStatusInterview(Guid interviewId,
         [FromBody] ChangeInterviewStatusDto dto,
         IChangeInterviewStatusUseCase useCase,
@@ -45,6 +52,7 @@ public class InterviewControllers : ControllerBase
             return result.Error switch
             {
                 INotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
+                IValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
                 _ => StatusCode(StatusCodes.Status500InternalServerError,
                     new ErrorResponse(StatusCodes.Status500InternalServerError, "An unexcepted error occured"))
             };

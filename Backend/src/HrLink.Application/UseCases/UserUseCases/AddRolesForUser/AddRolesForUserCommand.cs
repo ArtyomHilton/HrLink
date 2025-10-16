@@ -9,14 +9,14 @@ public class AddRolesForUserCommand
 {
     /// Идентификатор пользователя.
     public Guid UserId { get; set; }
-    
+
     /// Список идентификаторов ролей.
-    public List<Guid>? RoleIds { get; set; }
+    public ICollection<Guid> RoleIds { get; set; } = new List<Guid>();
 
     /// Маппит команду в доменную сущность <see cref="UserRole"/>. 
     public List<UserRole> ToEntity()
     {
-        return RoleIds!.Select(x => new UserRole()
+        return RoleIds.Select(x => new UserRole()
         {
             UserId = this.UserId,
             RoleId = x

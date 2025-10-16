@@ -38,13 +38,13 @@ public class AddUserCommand
     /// Пароль.
     /// </summary>
     public string Password { get; set; }
-    
+
     /// <summary>
     /// Список идентификаторов ролей пользователей.
     /// </summary>
-    public List<Guid>? RoleIds { get; set; }
+    public ICollection<Guid> RoleIds { get; set; }
 
-    public AddUserCommand(string firstName, string secondName, string? patronymic, DateTime dateOfBirthday, string email, string password, List<Guid>? roleIds)
+    public AddUserCommand(string firstName, string secondName, string? patronymic, DateTime dateOfBirthday, string email, string password, ICollection<Guid> roleIds)
     {
         FirstName = firstName;
         SecondName = secondName;

@@ -41,7 +41,7 @@ public class AddUserCommandValidator : AbstractValidator<AddUserCommand>
             .WithErrorCode("PasswordEmpty")
             .MinimumLength(6)
             .WithErrorCode("NotCorrectPasswordLength")
-            .Matches(@"^[A-Za-z!@#$%&?*()]{6,}$")
+            .Matches(@"^[A-Za-z0-9!@#$%&?*()]{6,}$")
             .WithErrorCode("NotCorrectPasswordFormat");
     }
 
