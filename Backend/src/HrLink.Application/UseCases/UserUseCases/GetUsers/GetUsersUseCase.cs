@@ -1,4 +1,5 @@
 using HrLink.Application.Common.Results;
+using HrLink.Application.DTOs;
 using HrLink.Application.Interfaces;
 using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -22,36 +23,39 @@ public class GetUsersUseCase : IGetUsersUseCase
     }
 
     /// <inheritdoc />
-    public async Task<Result<List<User>?>> Execute(GetUsersQuery query, CancellationToken cancellationToken)
+    public async Task<Result<List<UserShortDataResponse>>> Execute(GetUsersQuery query, CancellationToken cancellationToken)
     {
+        var cacheKey = $"{nameof(User)}s_page{query.Page}_itemperpage{query.ItemPerPage}_sort{query.SortBy}";
+        
         var users = await _cacheService
-            .GetAsync<List<User>?>(
-                $"{nameof(User)}s_page{query.Page}_itemperpage{query.ItemPerPage}_sort{query.SortBy}",
+            .GetAsync<List<UserShortDataResponse>?>(
+                cacheKey,
                 cancellationToken);
 
         if (users is not null)
         {
-            return Result.Success<List<User>?>(users);
+            return Result.Success(users);
         }
 
         users = await _context.Users
-            .Include(x => x.Employee)
             .Where(x => !x.IsDelete)
             .SortBy(query.SortBy)
             .Skip((query.Page - 1) * query.ItemPerPage)
             .Take(query.ItemPerPage)
+            .Select(x=> new UserShortDataResponse(
+                    x.Id, x.FirstName, 
+                    x.SecondName, 
+                    x.Patronymic, 
+                    x.Employee == null))
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
         if (users.Any())
         {
             await _cacheService
-                .SetAsync<List<User>?>(
-                    $"{nameof(User)}s_page{query.Page}_itemperpage{query.ItemPerPage}_sort{query.SortBy}",
-                    users,
-                    cancellationToken);
+                .SetAsync(cacheKey, users, cancellationToken);
         }
 
-        return Result.Success<List<User>?>(users);
+        return Result.Success(users);
     }
 }

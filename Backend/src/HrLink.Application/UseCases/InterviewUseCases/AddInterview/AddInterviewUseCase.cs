@@ -1,8 +1,8 @@
 using FluentValidation;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
+using HrLink.Application.DTOs;
 using HrLink.Application.Interfaces;
-using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HrLink.Application.UseCases.InterviewUseCases.AddInterview;
@@ -10,8 +10,9 @@ namespace HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 public class AddInterviewUseCase : IAddInterviewUseCase
 {
     private readonly IApplicationDbContext _context;
-    private readonly int _avgDurationInterview = 1;
     private readonly IValidator<AddInterviewCommand> _validator;
+    
+    private readonly int _avgDurationInterview = 1;
 
     public AddInterviewUseCase(IApplicationDbContext context, IValidator<AddInterviewCommand> validator)
     {
@@ -19,55 +20,79 @@ public class AddInterviewUseCase : IAddInterviewUseCase
         _validator = validator;
     }
 
-    public async Task<Result<Interview?>> Execute(AddInterviewCommand command, CancellationToken cancellationToken)
+    public async Task<Result<InterviewDetailDataResponse?>> Execute(AddInterviewCommand command,
+        CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            return Result.Failure<Interview?>(null,
+            return Result.Failure<InterviewDetailDataResponse?>(null,
                 new ValidateError(validationResult.Errors[0].ErrorCode, validationResult.Errors[0].PropertyName));
         }
 
         if (!await _context.Vacancies.AnyAsync(x => x.Id == command.VacancyId, cancellationToken))
         {
-            return Result.Failure<Interview?>(null, new ValidateError("VacancyNotExist", nameof(command.VacancyId)));
+            return Result.Failure<InterviewDetailDataResponse?>(null,
+                new ValidateError("VacancyNotExist", nameof(command.VacancyId)));
         }
 
         if (!await _context.Candidates.AnyAsync(x => x.Id == command.CandidateId, cancellationToken))
         {
-            return Result.Failure<Interview?>(null,
+            return Result.Failure<InterviewDetailDataResponse?>(null,
                 new ValidateError("CandidateNotExist", nameof(command.CandidateId)));
         }
 
         if (!await _context.Employees.AnyAsync(x => x.Id == command.EmployeeId, cancellationToken))
         {
-            return Result.Failure<Interview?>(null, new ValidateError("EmployeeNotExist", nameof(command.EmployeeId)));
+            return Result.Failure<InterviewDetailDataResponse?>(null,
+                new ValidateError("EmployeeNotExist", nameof(command.EmployeeId)));
         }
 
-        var interview = await _context.Interviews
+        var existInterview = await _context.Interviews
             .Where(x => x.CandidateId == command.CandidateId
                         || x.EmployeeId == command.EmployeeId
                         && (x.InterviewDateTime >= command.InterviewDateTime.AddHours(-_avgDurationInterview)
                             || x.InterviewDateTime <= command.InterviewDateTime.AddHours(_avgDurationInterview)))
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (interview is not null)
+        if (existInterview is not null)
         {
-            return Result.Failure<Interview?>(null,
-                new ValidateError("InterviewSchedulingConflict", nameof(command.InterviewDateTime),
-                    new Dictionary<string, object?>()
-                    {
-                        ["CurrentInterviewDateTime"] = command.InterviewDateTime,
-                        ["StartInterviewDateTime"] = command.InterviewDateTime.AddHours(-_avgDurationInterview),
-                        ["EndInterviewDateTime"] = command.InterviewDateTime.AddHours(_avgDurationInterview)
-                    }));
+            return Result.Failure<InterviewDetailDataResponse?>(null, new ValidateError("InterviewSchedulingConflict",
+                nameof(command.InterviewDateTime),
+                new Dictionary<string, object?>()
+                {
+                    ["CurrentInterviewDateTime"] = command.InterviewDateTime,
+                    ["StartInterviewDateTime"] = command.InterviewDateTime.AddHours(-_avgDurationInterview),
+                    ["EndInterviewDateTime"] = command.InterviewDateTime.AddHours(_avgDurationInterview)
+                }));
         }
 
         var entry = await _context.Interviews.AddAsync(command.ToEntity(), cancellationToken);
-        
+
         await _context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success<Interview?>(entry.Entity);
+        var interview = await _context.Interviews
+            .Where(x => x.Id == entry.Entity.Id)
+            .Select(x => new InterviewDetailDataResponse(
+                x.Id,
+                new VacancyShortDataResponse(
+                    x.VacancyId, 
+                    x.Vacancy.Position),
+                new CandidateShortDateResponse(
+                    x.CandidateId, 
+                    x.Candidate.FirstName, 
+                    x.Candidate.SecondName,
+                    x.Candidate.Patronymic),
+                new EmployeeShortDataResponse(
+                    x.EmployeeId, 
+                    x.Employee.User.FirstName,
+                    x.Employee.User.SecondName,
+                    x.Employee.User.Patronymic),
+                x.InterviewDateTime,
+                x.Status.StatusName))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return Result.Success(interview);
     }
 }

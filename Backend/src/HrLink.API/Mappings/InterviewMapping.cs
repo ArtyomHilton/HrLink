@@ -1,4 +1,5 @@
 using HrLink.API.DTOs.Interviews;
+using HrLink.Application.DTOs;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
 using HrLink.Domain.Entities;
@@ -11,42 +12,31 @@ namespace HrLink.API.Mappings;
 public static class InterviewMapping
 {
     /// <summary>
-    /// Маппит <see cref="Interview"/> в <see cref="InterviewResponseDto"/>.
+    /// Маппит <see cref="Interview"/> в <see cref="InterviewShortResponse"/>.
     /// </summary>
-    /// <param name="interview">Собеседование.</param>
-    /// <returns><see cref="InterviewResponseDto"/></returns>
-    public static InterviewResponseDto ToResponse(this Interview interview)
-    {
-        return new InterviewResponseDto()
-        {
-            Id = interview.Id,
-            Candidate = interview.Candidate!.ToResponse()
-        };
-    }
+    /// <param name="data">Собеседование.</param>
+    /// <returns><see cref="InterviewShortResponse"/></returns>
+    public static InterviewShortResponse ToResponse(this InterviewShortDataResponse data) =>
+        new(data.Id, data.VacancyName, data.InterviewDateTime.ToString("HH:mm dd.MM.yyyy"), data.Status);
 
     /// <summary>
-    /// Маппит коллекцию <see cref="Interview"/> в коллекцию <see cref="InterviewResponseDto"/>.
+    /// Маппит коллекцию <see cref="Interview"/> в коллекцию <see cref="InterviewShortResponse"/>.
     /// </summary>
     /// <param name="interviews">Коллекция <see cref="Interview"/></param>
-    /// <returns>Коллекцию <see cref="InterviewResponseDto"/>.</returns>
-    public static List<InterviewResponseDto> ToResponse(this ICollection<Interview> interviews)
+    /// <returns>Коллекцию <see cref="InterviewShortResponse"/>.</returns>
+    public static List<InterviewShortResponse> ToResponse(this ICollection<InterviewShortDataResponse> interviews)
     {
         return interviews
             .Select(x => x.ToResponse())
             .ToList();
     }
 
-    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto)
-    {
-        if (dto.VacancyId is null || dto.CandidateId is null ||
-            dto.EmployeeId is null || dto.InterviewDateTime is null)
-        {
-            throw new ArgumentNullException(nameof(dto), "DTO must be validated before conversion");
-        }
+    public static InterviewDetailResponse ToResponse(this InterviewDetailDataResponse data) =>
+        new InterviewDetailResponse(data.Id, data.Vacancy.ToResponse(), data.Candidate.ToResponse(),
+            data.Employee.ToResponse(), data.InterviewDateTime.ToString("HH:mm dd.MM.yyyy"), data.Status);
 
-        return new AddInterviewCommand(dto.VacancyId.Value, dto.CandidateId.Value, dto.EmployeeId.Value,
-            dto.InterviewDateTime.Value);
-    }
+    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto) =>
+        new (dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
 
     public static ChangeInterviewStatusCommand ToCommand(this ChangeInterviewStatusDto dto, Guid interviewId) =>
         new ChangeInterviewStatusCommand(interviewId, dto.StatusId);

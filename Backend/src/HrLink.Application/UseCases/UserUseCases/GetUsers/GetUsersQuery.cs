@@ -1,11 +1,10 @@
 using HrLink.Application.UseCases.UserUseCases.GetUsers.Enums;
-using HrLink.Domain.Entities;
 
 namespace HrLink.Application.UseCases.UserUseCases.GetUsers;
 
 /// <summary>
 /// Запрос для получения пользователей.
-/// Содержит необходимые данные для получения пользоватлей.
+/// Содержит необходимые данные для получения пользователей.
 /// </summary>
 public class GetUsersQuery
 {

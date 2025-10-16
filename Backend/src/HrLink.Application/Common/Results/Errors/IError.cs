@@ -5,5 +5,5 @@ public interface IError
     string ErrorCode { get; init; }
     string Target { get; init; }
     
-    Dictionary<string, object?>? Metadata { get; init; } 
+    Dictionary<string, object?> Metadata { get; init; } 
 }

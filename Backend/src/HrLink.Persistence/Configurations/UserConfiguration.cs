@@ -43,10 +43,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasDefaultValue(false);
 
-        builder.Property(x => x.IsDelete)
-            .IsRequired()
-            .HasDefaultValue(false);
-
         builder.Property(x => x.EmployeeId)
             .IsRequired(false);
         builder.HasIndex(x => x.EmployeeId)
