@@ -28,7 +28,7 @@ public class EmailService : IEmailService
 
         message.Body = new TextPart(TextFormat.Html)
         {
-            Text = bodyText
+            Text = bodyText,
         };
 
         using var smtpClient = new SmtpClient();

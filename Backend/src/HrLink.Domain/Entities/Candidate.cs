@@ -38,5 +38,5 @@ public class Candidate
     /// <summary>
     /// Навигационное свойство с <see cref="Interview"/>.
     /// </summary>
-    public ICollection<Interview>? Interviews { get; } = new List<Interview>();
+    public ICollection<Interview> Interviews { get; set; } = new List<Interview>();
 }

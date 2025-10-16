@@ -1,6 +1,5 @@
 using HrLink.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HrLink.Persistence.Configurations;
@@ -39,10 +38,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.PasswordHash)
             .IsRequired();
         
-        builder.Property(x => x.IsDelete)
-            .IsRequired()
-            .HasDefaultValue(false);
-
         builder.Property(x => x.IsDelete)
             .IsRequired()
             .HasDefaultValue(false);

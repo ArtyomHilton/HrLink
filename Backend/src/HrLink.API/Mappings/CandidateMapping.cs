@@ -1,4 +1,5 @@
 using HrLink.API.DTOs.Candidates;
+using HrLink.Application.DTOs;
 using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
@@ -25,4 +26,7 @@ public static class CandidateMapping
             PhoneNumber = candidate.PhoneNumber
         };
     }
+
+    public static CandidateShortResponse ToResponse(this CandidateShortDateResponse date) =>
+        new CandidateShortResponse(date.Id, date.FirstName, date.SecondName, date.Patronymic);
 }

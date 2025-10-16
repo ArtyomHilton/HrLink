@@ -8,9 +8,6 @@ using HrLink.Caching.Extensions;
 using HrLink.Email;
 using HrLink.Persistence.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using Serilog.Filters;
-using Serilog.Sinks.OpenSearch;
 
 var builder = WebApplication.CreateBuilder(args);
 

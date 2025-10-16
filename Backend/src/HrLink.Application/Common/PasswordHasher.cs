@@ -1,8 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using BCrypt.Net;
 using Konscious.Security.Cryptography;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 
 namespace HrLink.Application.Common;
 

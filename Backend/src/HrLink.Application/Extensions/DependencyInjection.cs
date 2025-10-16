@@ -1,4 +1,5 @@
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
+using HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
 using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.ChangePassword;
@@ -18,15 +19,13 @@ public static class DependencyInjection
     /// </summary>
     /// <param name="serviceCollection"><see cref="IServiceCollection"/>.</param>
     /// <returns>Измененный <see cref="IServiceCollection"/>.</returns>
-    public static IServiceCollection AddUseCases(this IServiceCollection serviceCollection)
-    {
-        serviceCollection.AddScoped<IAddUserUseCase, AddUserUseCase>();
-        serviceCollection.AddScoped<IAddRolesForUserUseCase, AddRolesForUserUseCase>();
-        serviceCollection.AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
-        serviceCollection.AddScoped<IGetUsersUseCase, GetUsersUseCase>();
-        serviceCollection.AddScoped<IAddInterviewUseCase, AddInterviewUseCase>();
-        serviceCollection.AddScoped<IChangeUserPasswordUseCase, ChangeUserPasswordUseCase>();
-        
-        return serviceCollection;
-    }
+    public static IServiceCollection AddUseCases(this IServiceCollection serviceCollection) =>
+        serviceCollection
+            .AddScoped<IAddUserUseCase, AddUserUseCase>()
+            .AddScoped<IAddRolesForUserUseCase, AddRolesForUserUseCase>()
+            .AddScoped<IGetUsersUseCase, GetUsersUseCase>()
+            .AddScoped<IAddInterviewUseCase, AddInterviewUseCase>()
+            .AddScoped<IChangeUserPasswordUseCase, ChangeUserPasswordUseCase>()
+            .AddScoped<IChangeInterviewStatusUseCase, ChangeInterviewStatusUseCase>()
+            .AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
 }

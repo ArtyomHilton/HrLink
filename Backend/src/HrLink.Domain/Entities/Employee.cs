@@ -34,14 +34,14 @@ public class Employee
     /// Дата последнего обновления.
     /// </summary>
     public DateTime? UpdatedAt { get; set; }
-    
+
     /// <summary>
     /// Навигационное свойство с <see cref="User"/>.
     /// </summary>
-    public User? User { get; set; }
+    public User User { get; set; } = null!;
     
     /// <summary>
     /// Навигационное свойство с <see cref="Interview"/>.
     /// </summary>
-    public ICollection<Interview>? Interviews { get; } = new List<Interview>();
+    public ICollection<Interview> Interviews { get; } = new List<Interview>();
 }

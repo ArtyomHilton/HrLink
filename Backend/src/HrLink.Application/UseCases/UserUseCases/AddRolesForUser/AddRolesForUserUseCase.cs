@@ -1,3 +1,4 @@
+using FluentValidation;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
 using HrLink.Application.Interfaces;
@@ -11,14 +12,24 @@ public class AddRolesForUserUseCase : IAddRolesForUserUseCase
     /// <inheritdoc cref="IApplicationDbContext"/>
     private readonly IApplicationDbContext _context;
 
-    public AddRolesForUserUseCase(IApplicationDbContext context)
+    private readonly IValidator<AddRolesForUserCommand> _validator;
+
+    public AddRolesForUserUseCase(IApplicationDbContext context, IValidator<AddRolesForUserCommand> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
     /// <inheritdoc />
     public async Task<Result> Execute(AddRolesForUserCommand command, CancellationToken cancellationToken)
     {
+        var validateResult = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (!validateResult.IsValid)
+        {
+            return Result.Failure(new ValidateError(validateResult.Errors[0].ErrorCode,validateResult.Errors[0].PropertyName));
+        }
+        
         command.RoleIds = await _context.Roles
             .Where(x => command.RoleIds!.Contains(x.Id))
             .Select(x => x.Id)

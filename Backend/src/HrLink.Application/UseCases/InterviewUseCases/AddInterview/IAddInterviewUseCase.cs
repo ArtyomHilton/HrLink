@@ -1,9 +1,9 @@
 using HrLink.Application.Common.Results;
-using HrLink.Domain.Entities;
+using HrLink.Application.DTOs;
 
 namespace HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 
 public interface IAddInterviewUseCase
 {
-    Task<Result<Interview?>> Execute(AddInterviewCommand command, CancellationToken cancellationToken);
+    Task<Result<InterviewDetailDataResponse?>> Execute(AddInterviewCommand command, CancellationToken cancellationToken);
 }

@@ -1,3 +1,4 @@
+using FluentValidation;
 using HrLink.Application.Common;
 using HrLink.Application.Common.Results;
 using HrLink.Application.Common.Results.Errors;
@@ -10,14 +11,23 @@ namespace HrLink.Application.UseCases.UserUseCases.ChangePassword;
 public class ChangeUserPasswordUseCase : IChangeUserPasswordUseCase
 {
     private readonly IApplicationDbContext _context;
+    private readonly IValidator<ChangeUserPasswordCommand> _validator;
 
-    public ChangeUserPasswordUseCase(IApplicationDbContext context)
+    public ChangeUserPasswordUseCase(IApplicationDbContext context, IValidator<ChangeUserPasswordCommand> validator)
     {
         _context = context;
+        _validator = validator;
     }
 
     public async Task<Result> Execute(ChangeUserPasswordCommand command, CancellationToken cancellationToken)
     {
+        var validateResult = await _validator.ValidateAsync(command, cancellationToken);
+
+        if (!validateResult.IsValid)
+        {
+            return Result.Failure(new ValidateError(validateResult.Errors[0].ErrorCode, validateResult.Errors[0].PropertyName));
+        }
+        
         var currentHashPassword = await _context.Users
             .Where(x => x.Id == command.Id)
             .Select(x => x.PasswordHash)
