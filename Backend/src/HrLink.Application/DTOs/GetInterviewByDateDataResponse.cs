@@ -1,0 +1,3 @@
+namespace HrLink.Application.DTOs;
+
+public record GetInterviewByDateDataResponse(InterviewShortDataResponse Interview, CandidateShortDateResponse Candidate);

@@ -1,0 +1,3 @@
+namespace HrLink.Application.UseCases.InterviewUseCases.GetInterviewByDay;
+
+public record GetInterviewsByDateQuery(DateTime InterviewDate);

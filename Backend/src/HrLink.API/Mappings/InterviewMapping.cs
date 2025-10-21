@@ -2,6 +2,7 @@ using HrLink.API.DTOs.Interviews;
 using HrLink.Application.DTOs;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
+using HrLink.Application.UseCases.InterviewUseCases.GetInterviewByDay;
 using HrLink.Domain.Entities;
 
 namespace HrLink.API.Mappings;
@@ -36,8 +37,18 @@ public static class InterviewMapping
             data.Employee.ToResponse(), data.InterviewDateTime.ToString("HH:mm dd.MM.yyyy"), data.Status);
 
     public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto) =>
-        new (dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
+        new AddInterviewCommand(dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
 
     public static ChangeInterviewStatusCommand ToCommand(this ChangeInterviewStatusDto dto, Guid interviewId) =>
         new ChangeInterviewStatusCommand(interviewId, dto.StatusId);
+
+    public static GetInterviewsByDateQuery ToQuery(this GetInterviewsByDateRequest request) =>
+        new GetInterviewsByDateQuery(request.InterviewDate);
+
+    public static List<GetInterviewsByDateResponse> ToResponse(this List<GetInterviewByDateDataResponse> response) =>
+        response.Select(x => x.ToResponse())
+            .ToList();
+
+    public static GetInterviewsByDateResponse ToResponse(this GetInterviewByDateDataResponse response) =>
+        new GetInterviewsByDateResponse(response.Interview.ToResponse(), response.Candidate.ToResponse());
 }

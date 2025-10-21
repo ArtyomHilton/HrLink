@@ -28,5 +28,5 @@ public static class CandidateMapping
     }
 
     public static CandidateShortResponse ToResponse(this CandidateShortDateResponse date) =>
-        new CandidateShortResponse(date.Id, date.FirstName, date.SecondName, date.Patronymic);
+        new CandidateShortResponse(date.Id, date.FirstName, date.SecondName, date.Patronymic, date.Email);
 }

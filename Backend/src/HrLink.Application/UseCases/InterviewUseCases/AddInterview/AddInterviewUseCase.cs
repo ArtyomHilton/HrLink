@@ -83,7 +83,8 @@ public class AddInterviewUseCase : IAddInterviewUseCase
                     x.CandidateId, 
                     x.Candidate.FirstName, 
                     x.Candidate.SecondName,
-                    x.Candidate.Patronymic),
+                    x.Candidate.Patronymic,
+                    x.Candidate.Email),
                 new EmployeeShortDataResponse(
                     x.EmployeeId, 
                     x.Employee.User.FirstName,

@@ -30,7 +30,7 @@ public class UsersControllers : ControllerBase
             return result.Error switch
             {
                 IValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
-                _ => StatusCode(StatusCodes.Status500InternalServerError)
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error.ToResponse(StatusCodes.Status500InternalServerError))
             };
         }
 
@@ -52,7 +52,7 @@ public class UsersControllers : ControllerBase
             return result.Error switch
             {
                 IValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
-                _ => StatusCode(StatusCodes.Status500InternalServerError)
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error.ToResponse(StatusCodes.Status500InternalServerError))
             };
         }
 
@@ -61,7 +61,7 @@ public class UsersControllers : ControllerBase
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(UserDetailResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUserById(Guid id,
+    public async Task<IActionResult> GetUserById([FromRoute] Guid id,
         [FromServices] IGetUserByIdUseCase useCase,
         CancellationToken cancellationToken)
     {
@@ -72,7 +72,7 @@ public class UsersControllers : ControllerBase
             return result.Error switch
             {
                 INotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
-                _ => StatusCode(StatusCodes.Status500InternalServerError)
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error.ToResponse(StatusCodes.Status500InternalServerError))
             };
         }
 
@@ -82,10 +82,19 @@ public class UsersControllers : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<UserShortResponse>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto,
-        IGetUsersUseCase useCase,
+        [FromServices] IGetUsersUseCase useCase,
         CancellationToken cancellationToken)
     {
         var result = await useCase.Execute(requestDto.ToQuery(), cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return result.Error switch
+            {
+                IValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error.ToResponse(StatusCodes.Status500InternalServerError))
+            };
+        }
 
         return Ok(result.Value.ToResponse());
     }
@@ -93,7 +102,7 @@ public class UsersControllers : ControllerBase
     [HttpPut("/{id:guid}/change-password")]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> ChangePasswordUser(Guid id,
+    public async Task<IActionResult> ChangePasswordUser([FromRoute] Guid id,
         [FromBody] ChangeUserPasswordRequestDto dto,
         [FromServices] IChangeUserPasswordUseCase useCase,
         CancellationToken cancellationToken)
@@ -106,8 +115,7 @@ public class UsersControllers : ControllerBase
             {
                 INotFoundError => NotFound(result.Error.ToResponse(StatusCodes.Status404NotFound)),
                 IValidateError => BadRequest(result.Error.ToResponse(StatusCodes.Status400BadRequest)),
-                _ => StatusCode(StatusCodes.Status500InternalServerError,
-                    result.Error?.ToResponse(StatusCodes.Status500InternalServerError))
+                _ => StatusCode(StatusCodes.Status500InternalServerError, result.Error.ToResponse(StatusCodes.Status500InternalServerError))
             };
         }
 
