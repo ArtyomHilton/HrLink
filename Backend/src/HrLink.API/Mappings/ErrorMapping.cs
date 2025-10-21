@@ -5,6 +5,6 @@ namespace HrLink.API.Mappings;
 
 public static class ErrorMapping
 {
-    public static ErrorResponse ToResponse(this IError error, int statusCode) =>
-        new ErrorResponse(statusCode, error.ErrorCode, error.GetType().Name, error.Target, error.Metadata);
+    public static ErrorResponse ToResponse(this IError? error, int statusCode) =>
+        new ErrorResponse(statusCode, error?.ErrorCode, error?.GetType().Name, error?.Target, error?.Metadata);
 }
