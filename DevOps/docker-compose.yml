@@ -12,6 +12,19 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
   
+  hrlink-quartz-database:
+    container_name: "HrLink-Quartz-Database"
+    image: postgres:alpine
+    restart: always
+    volumes:
+      - hrlink-quartz-database:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: ${DB_QUARTZ_USER}
+      POSTGRES_PASSWORD: ${DB_QUARTZ_PASSWORD}
+      POSTGRES_DB: ${DB_QUARTZ_NAME}
+  
   hrlink-redis:
     container_name: "HrLink-Redis"
     image: redis:alpine
@@ -59,6 +72,7 @@ services:
 
 volumes:
   hrlink-database:
+  hrlink-quartz-database:
   hrlink-redis:
   hrlink-opensearch:
 
