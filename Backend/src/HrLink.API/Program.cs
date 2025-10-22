@@ -4,10 +4,13 @@ using HrLink.API.Extensions;
 using HrLink.API.Middlewares;
 using HrLink.Application.Extensions;
 using HrLink.Application.Interfaces;
+using HrLink.BackgroundService;
+using HrLink.BackgroundService.Extensions;
 using HrLink.Caching.Extensions;
 using HrLink.Email;
 using HrLink.Persistence.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +22,14 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
+builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration.GetSection("QuartzConfiguration"));
 
 builder.Logging.AddLogger(builder);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(IEmailService)));
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddEmail();
+builder.Services.AddBackgroundService(builder.Configuration);
 builder.Services.AddUseCases();
 builder.Services.AddControllers();
 
@@ -32,8 +37,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-app.ApplyMigrations();
 
 app.UseGlobalExceptionHandlerMiddleware();
 
