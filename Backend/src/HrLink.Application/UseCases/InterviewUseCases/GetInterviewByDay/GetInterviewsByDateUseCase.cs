@@ -42,8 +42,6 @@ public class GetInterviewsByDateUseCase : IGetInterviewsByDateUseCase
         var startDate = DateTime.SpecifyKind(query.InterviewDate.Date, DateTimeKind.Utc);
         var endDate = startDate.AddDays(1);
         
-        Console.WriteLine(startDate);
-        
         interviews = await _context.Interviews
             .Where(x=> x.InterviewDateTime >=  startDate
                        && x.InterviewDateTime < endDate)

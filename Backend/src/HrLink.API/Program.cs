@@ -29,7 +29,7 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(IEmailSer
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddEmail();
-builder.Services.AddBackgroundService(builder.Configuration);
+builder.Services.AddBackgroundService();
 builder.Services.AddUseCases();
 builder.Services.AddControllers();
 
