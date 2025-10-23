@@ -1,3 +1,4 @@
+using HrLink.BackgroundService.Jobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -7,10 +8,11 @@ namespace HrLink.BackgroundService.Extensions;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddBackgroundService(this IServiceCollection serviceCollection, IConfiguration configuration)
+    public static IServiceCollection AddBackgroundService(this IServiceCollection serviceCollection)
     {
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        var options = serviceProvider.GetRequiredService<IOptions<BackgroundServiceOptions>>();
+        using var scope = serviceCollection.BuildServiceProvider()
+            .CreateScope();
+        var options = scope.ServiceProvider.GetRequiredService<IOptions<BackgroundServiceOptions>>();
         
         serviceCollection.AddQuartz(configurator =>
         {
@@ -29,6 +31,8 @@ public static class DependencyInjection
             {
                 configurator.Properties.Add(valueProperty.Key, valueProperty.Value);
             }
+
+            configurator.AddJobs();
         });
 
         serviceCollection.AddQuartzHostedService(configure =>
@@ -38,5 +42,18 @@ public static class DependencyInjection
         });
         
         return serviceCollection;
+    }
+
+    private static IServiceCollectionQuartzConfigurator AddJobs(this IServiceCollectionQuartzConfigurator configurator)
+    {
+        configurator.AddJob<SendInterviewNotification>(SendInterviewNotification.JobKey);
+        configurator.AddTrigger(options =>
+        {
+            options.WithIdentity(SendInterviewNotification.TriggerKey)
+                .ForJob(SendInterviewNotification.JobKey)
+                .WithCronSchedule("0 0 2 ? * MON-FRI");
+        });
+
+        return configurator;
     }
 }
