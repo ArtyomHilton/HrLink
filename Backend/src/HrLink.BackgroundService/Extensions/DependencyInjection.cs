@@ -1,5 +1,4 @@
 using HrLink.BackgroundService.Jobs;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Quartz;
@@ -12,7 +11,7 @@ public static class DependencyInjection
     {
         using var scope = serviceCollection.BuildServiceProvider()
             .CreateScope();
-        var options = scope.ServiceProvider.GetRequiredService<IOptions<BackgroundServiceOptions>>();
+        var options = scope.ServiceProvider.GetRequiredService<IOptions<QuartzOptions>>();
         
         serviceCollection.AddQuartz(configurator =>
         {
