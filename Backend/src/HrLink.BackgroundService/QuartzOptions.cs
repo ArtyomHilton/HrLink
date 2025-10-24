@@ -1,8 +1,6 @@
-using Microsoft.Extensions.Options;
-
 namespace HrLink.BackgroundService;
 
-public class BackgroundServiceOptions
+public class QuartzOptions
 {
     public string ConnectionString { get; set; } = string.Empty;
     public string TablePrefix { get; set; } = string.Empty;

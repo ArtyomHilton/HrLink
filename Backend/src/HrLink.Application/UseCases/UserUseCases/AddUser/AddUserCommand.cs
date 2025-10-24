@@ -73,7 +73,7 @@ public class AddUserCommand
             Email = this.Email,
             PasswordHash = PasswordHasher.HashPassword(this.Password),
             IsDelete = false,
-            UserRoles = RoleIds!.Select(x => new UserRole()
+            UserRoles = RoleIds.Select(x => new UserRole()
             {
                 RoleId = x,
                 UserId = userId

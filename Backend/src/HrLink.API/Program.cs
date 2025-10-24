@@ -4,6 +4,8 @@ using HrLink.API.Extensions;
 using HrLink.API.Middlewares;
 using HrLink.Application.Extensions;
 using HrLink.Application.Interfaces;
+using HrLink.Auth;
+using HrLink.Auth.Extensions;
 using HrLink.BackgroundService;
 using HrLink.BackgroundService.Extensions;
 using HrLink.Caching.Extensions;
@@ -22,10 +24,12 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 
 builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(nameof(SmtpOptions)));
-builder.Services.Configure<BackgroundServiceOptions>(builder.Configuration.GetSection("QuartzConfiguration"));
+builder.Services.Configure<QuartzOptions>(builder.Configuration.GetSection(nameof(QuartzOptions)));
+builder.Services.Configure<JwtBearerOptions>(builder.Configuration.GetSection(nameof(JwtBearerOptions)));
 
 builder.Logging.AddLogger(builder);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(IEmailService)));
+builder.Services.AddApiAuthentication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddCaching(builder.Configuration);
 builder.Services.AddEmail();
@@ -53,5 +57,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
