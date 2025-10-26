@@ -17,7 +17,7 @@ public class InterviewControllers : ControllerBase
     [ProducesResponseType(typeof(InterviewDetailResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AddInterview([FromBody] AddInterviewRequestDto dto,
+    public async Task<IActionResult> AddInterview([FromBody] AddInterviewRequest dto,
         [FromServices] IAddInterviewUseCase useCase,
         CancellationToken cancellationToken)
     {
@@ -63,7 +63,7 @@ public class InterviewControllers : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ChangeStatusInterview(Guid interviewId,
-        [FromBody] ChangeInterviewStatusDto dto,
+        [FromBody] ChangeInterviewStatus dto,
         IChangeInterviewStatusUseCase useCase,
         CancellationToken cancellationToken)
     {

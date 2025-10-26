@@ -15,5 +15,5 @@ public interface IGetUserByIdUseCase
     /// <param name="query"><see cref="GetUserByIdQuery"/> Запрос для получения пользователя по идентификатору</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Результат выполнения запроса.</returns>
-    public Task<Result<UserDetailDataResponse?>> Execute(GetUserByIdQuery query, CancellationToken cancellationToken);
+    public Task<Result<UserDetailDataResponse>> Execute(GetUserByIdQuery query, CancellationToken cancellationToken);
 }

@@ -1,6 +1,6 @@
 namespace HrLink.API.DTOs.Users;
 
-public record GetUsersRequestDto
+public record GetUsersRequest
 {
     public int Page { get; set; } = 1;
     public int ItemPerPage { get; set; } = 10;

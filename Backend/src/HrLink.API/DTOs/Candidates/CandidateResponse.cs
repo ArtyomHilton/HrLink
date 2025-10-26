@@ -1,6 +1,6 @@
 namespace HrLink.API.DTOs.Candidates;
 
-public record CandidateResponseDto
+public record CandidateResponse
 {
     public required Guid Id { get; set; }
     public required string FirstName { get; set; }

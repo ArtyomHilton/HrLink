@@ -34,7 +34,7 @@ public class GetUsersUseCase : IGetUsersUseCase
 
         if (!validateResult.IsValid)
         {
-            return Result.Failure<List<UserShortDataResponse>>([], new ValidateError(validateResult.Errors[0].ErrorCode,
+            return Result.Failure<List<UserShortDataResponse>>(new ValidateError(validateResult.Errors[0].ErrorCode,
                 validateResult.Errors[0].PropertyName));
         }
         

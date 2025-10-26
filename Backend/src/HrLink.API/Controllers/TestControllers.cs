@@ -19,14 +19,4 @@ public class TestControllers : ControllerBase
         
         return Ok();
     }
-
-    [HttpPost]
-    [Route("/token")]
-    public async Task<IActionResult> GetToken([FromServices] IJwtProvider provider, 
-        CancellationToken cancellationToken)
-    {
-        var token = provider.GenerateToken();
-
-        return Ok(token);
-    }
 }

@@ -10,13 +10,13 @@ namespace HrLink.API.Mappings;
 public static class CandidateMapping
 {
     /// <summary>
-    /// Маппит <see cref="Candidate"/> в <see cref="CandidateResponseDto"/>.
+    /// Маппит <see cref="Candidate"/> в <see cref="CandidateResponse"/>.
     /// </summary>
     /// <param name="candidate">Кандидат</param>
-    /// <returns><see cref="CandidateResponseDto"/></returns>
-    public static CandidateResponseDto ToResponse(this Candidate candidate)
+    /// <returns><see cref="CandidateResponse"/></returns>
+    public static CandidateResponse ToResponse(this Candidate candidate)
     {
-        return new CandidateResponseDto()
+        return new CandidateResponse()
         {
             Id = candidate.Id,
             FirstName = candidate.FirstName,
@@ -27,6 +27,6 @@ public static class CandidateMapping
         };
     }
 
-    public static CandidateShortResponse ToResponse(this CandidateShortDateResponse date) =>
-        new CandidateShortResponse(date.Id, date.FirstName, date.SecondName, date.Patronymic, date.Email);
+    public static CandidateShortResponse ToResponse(this CandidateShortDataResponse data) =>
+        new CandidateShortResponse(data.Id, data.FirstName, data.SecondName, data.Patronymic, data.Email);
 }

@@ -22,19 +22,18 @@ public class AddUserUseCase : IAddUserUseCase
     }
     
     /// <inheritdoc />
-    public async Task<Result<UserDetailDataResponse?>> Execute(AddUserCommand command, CancellationToken cancellationToken)
+    public async Task<Result<UserDetailDataResponse>> Execute(AddUserCommand command, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            return Result.Failure<UserDetailDataResponse?>(null,
-                new ValidateError(validationResult.Errors[0].ErrorCode, validationResult.Errors[0].PropertyName));
+            return Result.Failure<UserDetailDataResponse>(new ValidateError(validationResult.Errors[0].ErrorCode, validationResult.Errors[0].PropertyName));
         }
         
         if (await _context.Users.AnyAsync(x=> x.Email == command.Email, cancellationToken))
         {
-            return Result.Failure<UserDetailDataResponse?>(null, new ValidateError("EmailExist", nameof(command.Email)));
+            return Result.Failure<UserDetailDataResponse>(new ValidateError("EmailExist", nameof(command.Email)));
         }
 
         command.RoleIds = await _context.Roles
@@ -74,6 +73,6 @@ public class AddUserUseCase : IAddUserUseCase
             .AsNoTracking()
             .FirstOrDefaultAsync(cancellationToken);
 
-        return Result.Success(user);
+        return Result.Success(user!);
     }
 }

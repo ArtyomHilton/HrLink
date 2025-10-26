@@ -2,7 +2,7 @@ using HrLink.Application.UseCases.UserUseCases.AddRolesForUser;
 
 namespace HrLink.API.DTOs.Users;
 
-public record AddRolesForUserDto
+public record AddRolesForUser
 {
     public ICollection<Guid> RoleIds { get; set; } = new List<Guid>();
 
