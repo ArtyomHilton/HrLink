@@ -25,9 +25,9 @@ public static class EmployeeMapping
     /// </summary>
     /// <param name="employee">Сотрудник.</param>
     /// <returns><see cref="EmployeeResponse"/>.</returns>
-    public static GetUsersEmployeeResponseDto ToShortResponse(this Employee employee)
+    public static GetUsersEmployeeResponse ToShortResponse(this Employee employee)
     {
-        return new GetUsersEmployeeResponseDto
+        return new GetUsersEmployeeResponse
         {
             Id = employee.Id,
             Position = employee.Position

@@ -22,14 +22,14 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
         _validator = validator;
     }
 
-    public async Task<Result<UserDetailDataResponse?>> Execute(GetUserByIdQuery query,
+    public async Task<Result<UserDetailDataResponse>> Execute(GetUserByIdQuery query,
         CancellationToken cancellationToken)
     {
         var validateResult = await _validator.ValidateAsync(query, cancellationToken);
 
         if (!validateResult.IsValid)
         {
-            return Result.Failure<UserDetailDataResponse?>(null,
+            return Result.Failure<UserDetailDataResponse>(
                 new ValidateError(validateResult.Errors[0].ErrorCode, validateResult.Errors[0].PropertyName));
         }
 
@@ -37,7 +37,7 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
 
         if (user is not null)
         {
-            return Result.Success<UserDetailDataResponse?>(user);
+            return Result.Success<UserDetailDataResponse>(user);
         }
 
         user = await _context.Users
@@ -69,12 +69,12 @@ public class GetUserByIdUseCase : IGetUserByIdUseCase
 
         if (user is null)
         {
-            return Result.Failure(user, new NotFoundError<User>(nameof(query.Id),
+            return Result.Failure<UserDetailDataResponse>(new NotFoundError<User>(nameof(query.Id),
                 new Dictionary<string, object?>() { ["UserId"] = query.Id }));
         }
 
         await _cacheService.SetAsync($"user_{query.Id}", user, cancellationToken);
 
-        return Result.Success<UserDetailDataResponse?>(user);
+        return Result.Success<UserDetailDataResponse>(user);
     }
 }

@@ -7,6 +7,7 @@ using HrLink.Application.UseCases.UserUseCases.AddUser;
 using HrLink.Application.UseCases.UserUseCases.ChangePassword;
 using HrLink.Application.UseCases.UserUseCases.GetUserByIdUser;
 using HrLink.Application.UseCases.UserUseCases.GetUsers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrLink.API.Controllers;
@@ -41,7 +42,7 @@ public class UsersControllers : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> AddRolesForUser(Guid id,
-        [FromBody] AddRolesForUserDto dto,
+        [FromBody] AddRolesForUser dto,
         [FromServices] IAddRolesForUserUseCase useCase,
         CancellationToken cancellationToken)
     {
@@ -81,11 +82,11 @@ public class UsersControllers : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(List<UserShortResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequestDto requestDto,
+    public async Task<IActionResult> GetUsers([FromQuery] GetUsersRequest request,
         [FromServices] IGetUsersUseCase useCase,
         CancellationToken cancellationToken)
     {
-        var result = await useCase.Execute(requestDto.ToQuery(), cancellationToken);
+        var result = await useCase.Execute(request.ToQuery(), cancellationToken);
 
         if (result.IsFailure)
         {
@@ -103,7 +104,7 @@ public class UsersControllers : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangePasswordUser([FromRoute] Guid id,
-        [FromBody] ChangeUserPasswordRequestDto dto,
+        [FromBody] ChangeUserPasswordRequest dto,
         [FromServices] IChangeUserPasswordUseCase useCase,
         CancellationToken cancellationToken)
     {

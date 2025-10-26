@@ -26,7 +26,7 @@ public class GetInterviewsByDateUseCase : IGetInterviewsByDateUseCase
 
         if (!validateResult.IsValid)
         {
-            return Result.Failure<List<GetInterviewByDateDataResponse>>([] ,new ValidateError(validateResult.Errors[0].ErrorCode,
+            return Result.Failure<List<GetInterviewByDateDataResponse>>(new ValidateError(validateResult.Errors[0].ErrorCode,
                 validateResult.Errors[0].PropertyName));
         }
         
@@ -51,7 +51,7 @@ public class GetInterviewsByDateUseCase : IGetInterviewsByDateUseCase
                 x.Vacancy.Position,
                 x.InterviewDateTime,
                 x.Status.StatusName),
-            new CandidateShortDateResponse(
+            new CandidateShortDataResponse(
                 x.Candidate.Id,
                 x.Candidate.FirstName,
                 x.Candidate.SecondName,

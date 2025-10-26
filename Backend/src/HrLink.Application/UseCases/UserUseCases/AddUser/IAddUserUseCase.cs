@@ -15,5 +15,5 @@ public interface IAddUserUseCase
     /// <param name="command"><see cref="AddUserCommand"/> Данные для добавления пользователя.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Результат выполнения команды.</returns>
-    Task<Result<UserDetailDataResponse?>> Execute(AddUserCommand command, CancellationToken cancellationToken);
+    Task<Result<UserDetailDataResponse>> Execute(AddUserCommand command, CancellationToken cancellationToken);
 }

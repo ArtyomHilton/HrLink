@@ -1,3 +1,4 @@
+using HrLink.Application.UseCases.AuthUseCase.Login;
 using HrLink.Application.UseCases.InterviewUseCases.AddInterview;
 using HrLink.Application.UseCases.InterviewUseCases.ChangeInterviewStatus;
 using HrLink.Application.UseCases.InterviewUseCases.GetInterviewByDay;
@@ -29,5 +30,6 @@ public static class DependencyInjection
             .AddScoped<IGetInterviewsByDateUseCase, GetInterviewsByDateUseCase>()
             .AddScoped<IChangeUserPasswordUseCase, ChangeUserPasswordUseCase>()
             .AddScoped<IChangeInterviewStatusUseCase, ChangeInterviewStatusUseCase>()
-            .AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>();
+            .AddScoped<IGetUserByIdUseCase, GetUserByIdUseCase>()
+            .AddScoped<ILoginUseCase, LoginUseCase>();
 }

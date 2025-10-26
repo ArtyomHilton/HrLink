@@ -36,10 +36,10 @@ public static class InterviewMapping
         new InterviewDetailResponse(data.Id, data.Vacancy.ToResponse(), data.Candidate.ToResponse(),
             data.Employee.ToResponse(), data.InterviewDateTime.ToString("HH:mm dd.MM.yyyy"), data.Status);
 
-    public static AddInterviewCommand ToCommand(this AddInterviewRequestDto dto) =>
+    public static AddInterviewCommand ToCommand(this AddInterviewRequest dto) =>
         new AddInterviewCommand(dto.VacancyId, dto.CandidateId, dto.EmployeeId, dto.InterviewDateTime);
 
-    public static ChangeInterviewStatusCommand ToCommand(this ChangeInterviewStatusDto dto, Guid interviewId) =>
+    public static ChangeInterviewStatusCommand ToCommand(this ChangeInterviewStatus dto, Guid interviewId) =>
         new ChangeInterviewStatusCommand(interviewId, dto.StatusId);
 
     public static GetInterviewsByDateQuery ToQuery(this GetInterviewsByDateRequest request) =>

@@ -20,32 +20,32 @@ public class AddInterviewUseCase : IAddInterviewUseCase
         _validator = validator;
     }
 
-    public async Task<Result<InterviewDetailDataResponse?>> Execute(AddInterviewCommand command,
+    public async Task<Result<InterviewDetailDataResponse>> Execute(AddInterviewCommand command,
         CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
 
         if (!validationResult.IsValid)
         {
-            return Result.Failure<InterviewDetailDataResponse?>(null,
+            return Result.Failure<InterviewDetailDataResponse>(
                 new ValidateError(validationResult.Errors[0].ErrorCode, validationResult.Errors[0].PropertyName));
         }
 
         if (!await _context.Vacancies.AnyAsync(x => x.Id == command.VacancyId, cancellationToken))
         {
-            return Result.Failure<InterviewDetailDataResponse?>(null,
+            return Result.Failure<InterviewDetailDataResponse>(
                 new ValidateError("VacancyNotExist", nameof(command.VacancyId)));
         }
 
         if (!await _context.Candidates.AnyAsync(x => x.Id == command.CandidateId, cancellationToken))
         {
-            return Result.Failure<InterviewDetailDataResponse?>(null,
+            return Result.Failure<InterviewDetailDataResponse>(
                 new ValidateError("CandidateNotExist", nameof(command.CandidateId)));
         }
 
         if (!await _context.Employees.AnyAsync(x => x.Id == command.EmployeeId, cancellationToken))
         {
-            return Result.Failure<InterviewDetailDataResponse?>(null,
+            return Result.Failure<InterviewDetailDataResponse>(
                 new ValidateError("EmployeeNotExist", nameof(command.EmployeeId)));
         }
 
@@ -53,12 +53,12 @@ public class AddInterviewUseCase : IAddInterviewUseCase
             .Where(x => x.CandidateId == command.CandidateId
                         || x.EmployeeId == command.EmployeeId
                         && (x.InterviewDateTime >= command.InterviewDateTime.AddHours(-_avgDurationInterview)
-                            || x.InterviewDateTime <= command.InterviewDateTime.AddHours(_avgDurationInterview)))
+                            && x.InterviewDateTime <= command.InterviewDateTime.AddHours(_avgDurationInterview)))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (existInterview is not null)
         {
-            return Result.Failure<InterviewDetailDataResponse?>(null, new ValidateError("InterviewSchedulingConflict",
+            return Result.Failure<InterviewDetailDataResponse>(new ValidateError("InterviewSchedulingConflict",
                 nameof(command.InterviewDateTime),
                 new Dictionary<string, object?>()
                 {
@@ -79,7 +79,7 @@ public class AddInterviewUseCase : IAddInterviewUseCase
                 new VacancyShortDataResponse(
                     x.VacancyId, 
                     x.Vacancy.Position),
-                new CandidateShortDateResponse(
+                new CandidateShortDataResponse(
                     x.CandidateId, 
                     x.Candidate.FirstName, 
                     x.Candidate.SecondName,
@@ -94,6 +94,6 @@ public class AddInterviewUseCase : IAddInterviewUseCase
                 x.Status.StatusName))
             .FirstOrDefaultAsync(cancellationToken);
 
-        return Result.Success(interview);
+        return Result.Success(interview!);
     }
 }

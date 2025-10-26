@@ -40,19 +40,19 @@ public static class UserMapping
             .ToList() 
         ?? new List<UserShortResponse>();
 
-    public static GetUsersQuery ToQuery(this GetUsersRequestDto dto) =>
+    public static GetUsersQuery ToQuery(this GetUsersRequest dto) =>
         new GetUsersQuery(dto.Page, dto.ItemPerPage, dto.SortBy);
 
     public static AddUserCommand ToCommand(this AddUserRequest dto) =>
         new AddUserCommand(dto.FirstName, dto.SecondName, dto.Patronymic, dto.DateOfBirthday, dto.Email, dto.Password, dto.RoleIds);
     
-    public static AddRolesForUserCommand ToCommand(this AddRolesForUserDto dto, Guid userId) =>
+    public static AddRolesForUserCommand ToCommand(this AddRolesForUser dto, Guid userId) =>
         new AddRolesForUserCommand()
         {
             UserId = userId,
             RoleIds = dto.RoleIds
         };
 
-    public static ChangeUserPasswordCommand ToCommand(this ChangeUserPasswordRequestDto dto, Guid userId) =>
+    public static ChangeUserPasswordCommand ToCommand(this ChangeUserPasswordRequest dto, Guid userId) =>
         new ChangeUserPasswordCommand(userId, dto.Password, dto.NewPassword);
 }
